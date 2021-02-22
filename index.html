@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <title>Hacked Hogwarts</title>
+        <meta name="description" content="">
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+        <link rel="stylesheet" href="style.css">
+    </head>
+    <body>
+<div id="top-bar" class="inline">
+
+<select name="house-filter" id="house-filter">
+    <option value="none" selected disabled hidden>Filter by house</option>
+    <option value="all">Show All</option>
+    <option value="hogwarts">Hogwarts</option>
+    <option value="ravenclaw">Ravenclaw</option>
+    <option value="hufflepuff">Hufflepuff</option>
+    <option value="slytherin">Slytherin</option>
+</select>
+
+<select name="expelled-filter" id="expelled-filter">
+    <option value="none" selected disabled hidden>Filter by student status</option>
+    <option value="all">Show All</option>
+    <option value="Only Expelled">Expelled</option>
+    <option value="Only non-expelled">Non-expelled</option>
+</select>
+
+<input type="text" id="search-bar" placeholder="Search students..">
+
+</div>
+
+<div id="number-section">
+    <p id="current-no">There's currently bla students showing</p>
+    <p id="more-details">Show more details...</p>
+</div>
+
+<table id="list">
+    <thead>
+      <tr id="sorting">
+        <th data-action="sort" data-sort-direction="asc" data-sort="first-name">First Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="middle-name">Middle Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="last-name">Last Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
+      </tr>
+    </thead>
+    <tbody>
+      <!-- template with names fetched will be cloned and appended here -->
+    </tbody>
+  </table>
+
+  <template id="student">
+    <tr>
+      <td data-field="firstname">FIRST NAME</td>
+      <td data-field="middlename">MIDDLE NAME</td>
+      <td data-field="lastname">LAST NAME</td>
+      <td data-field="nickname">NICK NAME</td>
+    </tr>
+  </template>
+
+<div id="student-popup" class="hide">
+<img src="icons/cancel.svg" class="cancel-img">
+<img src="images/granger_h.png" class="student-img">
+<img src="icons/gryffindor.svg" class="house-img">
+
+<div id="info-wrapper">
+<h4>First Name: Hermoine</h4>
+<h4>Middle Name: N/A</h4>
+<h4>Last Name: Granger</h4>
+<h4>Nickname: N/A</h4>
+<h4>Other Info: not expelled, prefect</h4>
+</div>
+
+<div id="button-section">
+    <button>Make Prefect</button>
+    <button>Expell</button>
+    <button>Add to Squad</button>
+</div>
+
+</div>
+
+<div id="number-popup" class="hide">
+<div id="number-text-wrapper">
+<p>Total students: 124938</p>
+<p>Expelled students: 124938</p>
+<p>Gryffindor students: 124938</p>
+<p>Slytherin students: 124938</p>
+<p>Total students: 124938</p>
+</div>
+<img src="icons/cancel.svg" class="cancel-img">
+</div>
+
+</div>
+<script src="hogwarts.js"></script>
+    </body>
+</html>
