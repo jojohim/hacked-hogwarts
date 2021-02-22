@@ -4,7 +4,13 @@ window.addEventListener("DOMContentLoaded", start);
 
 let studentsGlobalArray = [];
 let globalStudents = [];
-let filter;
+let houseSelected;
+let statusSelected;
+let sort;
+
+let houseFilter = document.querySelector("#housefilter");
+let listItems = document.querySelectorAll("[data-action=sort]");
+console.log(listItems);
 
 let studentTemplate = {
     fullname:"",
@@ -15,7 +21,12 @@ let studentTemplate = {
 function start() {
     loadJSON();
 
-    //Add event listeners for filters, etc
+    //Add event listeners for filters and sorts
+        houseFilter.addEventListener("change", checkFilter);
+
+        listItems.forEach((listItem) => {
+            listItem.addEventListener("click", checkSort);
+        });
 }
 
 async function loadJSON() {
@@ -59,6 +70,7 @@ function displayStudent(student) {
     copy.querySelector("[data-field=middlename]").textContent = student.middleName;
     copy.querySelector("[data-field=lastname]").textContent = student.lastName;
     copy.querySelector("[data-field=nickname]").textContent = student.nickName;
+    copy.querySelector("[data-field=house]").textContent = student.house;
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
 
@@ -87,6 +99,9 @@ function getItems(student){
         nickName: nameObject.nickName,
         house: studentHouse,
         imageUrl: imageURL,
+        expelled: undefined,
+        prefect: undefined,
+        squadMember: undefined,
     }
 }
 
@@ -157,6 +172,36 @@ function openNumberPopup(){
 
 //FILTERS 
 function checkFilter(event) {
+    //filter = event.target.dataset.filter;
+    houseSelected = houseFilter.selectedIndex;
+
+    const filteredStudents = filterStudents();
+    displayTable(filteredStudents);
+}
+
+function filterStudents() {
+    //console.log(optionSelected);
+    let filteredStudents = [];
+    switch(houseSelected) {
+        case 1:
+            filteredStudents = globalStudents.filter(isAll);
+            break;
+        case 2:
+            filteredStudents = globalStudents.filter(isGryffindor);
+            break;
+        case 3:
+            filteredStudents = globalStudents.filter(isRavenclaw);
+            break;
+        case 4:
+            filteredStudents = globalStudents.filter(isHufflepuff);
+            break;
+        case 5:
+            filteredStudents = globalStudents.filter(isSlytherin);
+            break;
+    }
+
+return filteredStudents;
+
 }
 
 function isExpelled(student) {    
@@ -166,18 +211,44 @@ function isNotExpelled(student) {
 }
 
 function isHufflepuff(student){
+    if(student.house === "hufflepuff" || student.house === "Hufflepuff"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 function isGryffindor(student){
+    if(student.house === "gryffindor" || student.house === "Gryffindor"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 function isSlytherin(student){
+    if(student.house === "slytherin" || student.house === "Slytherin"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 function isRavenclaw(student){
+    if(student.house === "ravenclaw" || student.house === "Ravenclaw"){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 function isAll(student){
+    return true;
+
 }
 
 //HOUSE COLOURS AND CREST 
@@ -188,6 +259,61 @@ function displayCrestAndColours(house){
 }
 
 //SORTING 
+function checkSort(event) {
+    sort = event.target.dataset.sort;
+    console.log(sort);
+
+    const sortedStudents = sortStudents();
+    displayTable(sortedStudents);
+}
+
+function sortStudents(){
+
+    let  sortedStudents = [];
+    switch(sort){
+        case "first-name":
+            sortedStudents = globalStudents.sort(sortByFirstName);
+            break;
+        case "middle-name":
+            sortedStudents = globalStudents;
+            break;
+        case "last-name":
+            sortedStudents = globalStudents.sort(sortByLastName);
+            break;
+        case "nickname":
+            sortedStudents = globalStudents;
+            break;
+
+        case "house":
+            sortedStudents = globalStudents;
+            break;
+    }
+
+
+    return sortedStudents;
+
+
+    return sortedStudents;
+}
+
+
+function sortByFirstName(a , b) {
+        if(a.firstName < b.firstName) {
+            return -1;
+            }
+            else {
+                return 1;
+            }
+}
+
+function sortByLastName(a, b){
+    if(a.lastName < b.lastName) {
+        return -1;
+        }
+        else {
+            return 1;
+        }
+}
 
 //CHECK FOR EXPELL, SQUAD AND PREFECT
 function checkDetails() {

@@ -11,13 +11,13 @@
     <body>
 <div id="top-bar" class="inline">
 
-<select name="house-filter" id="house-filter">
+<select name="house-filter" id="housefilter">
     <option value="none" selected disabled hidden>Filter by house</option>
-    <option value="all">Show All</option>
-    <option value="hogwarts">Hogwarts</option>
-    <option value="ravenclaw">Ravenclaw</option>
-    <option value="hufflepuff">Hufflepuff</option>
-    <option value="slytherin">Slytherin</option>
+    <option value="all" class="housefilter" data-action="filter" data-filter="all">Show All</option>
+    <option value="gryffindor" class="housefilter" data-action="filter" data-filter="gyffindor">Gryffindor</option>
+    <option value="ravenclaw" class="housefilter" data-action="filter" data-filter="ravenclaw">Ravenclaw</option>
+    <option value="hufflepuff" class="housefilter" data-action="filter" data-filter="hufflepuff">Hufflepuff</option>
+    <option value="slytherin" class="housefilter" data-action="filter" data-filter="slytherin">Slytherin</option>
 </select>
 
 <select name="expelled-filter" id="expelled-filter">
@@ -43,6 +43,7 @@
         <th data-action="sort" data-sort-direction="asc" data-sort="middle-name">Middle Name</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="last-name">Last Name</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
       </tr>
     </thead>
     <tbody>
@@ -56,6 +57,7 @@
       <td data-field="middlename">MIDDLE NAME</td>
       <td data-field="lastname">LAST NAME</td>
       <td data-field="nickname">NICK NAME</td>
+      <td data-field="house">HOUSE</td>
     </tr>
   </template>
 
