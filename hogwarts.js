@@ -62,6 +62,8 @@ function displayStudent(student) {
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
 
+    
+
 }
 
 function cleanStudents(students){
