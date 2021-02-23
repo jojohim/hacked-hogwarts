@@ -385,9 +385,6 @@ toggleSquadMember();
 togglePrefect();
 }
 
-function toggleExpell(){
-}
-
 function toggleSquadMember(){
     //if state false add as squad member 
     //if state true delete as squad member
