@@ -158,7 +158,14 @@ tbody tr:nth-child(even){
 }
 tbody tr:hover {
     cursor: pointer;
-    color: white;
-    background-color: rgb(93, 80, 180);
+    background-color: rgb(221, 219, 233);
 
+}
+
+tr th:hover {
+    cursor: pointer;
+}
+
+#expelled {
+    text-align: center;
 }

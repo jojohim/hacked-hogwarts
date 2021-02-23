@@ -5,10 +5,16 @@ window.addEventListener("DOMContentLoaded", start);
 let studentsGlobalArray = [];
 let globalStudents = [];
 
+
+//OBJECT FOR FILTERING AND SORTING 
+let settings = {
+    filterBy: "All",
+    sortBy: "all",
+    sortDir: "",
+}
+
 //variables for filtering
-let houseFilter = document.querySelector("#housefilter");
-let houseSelected;
-let statusSelected;
+let houseButton = document.getElementById("housefilter");
 
 //variables for sorting
 let listItems = document.querySelectorAll("[data-action=sort]");
@@ -16,7 +22,6 @@ let listItems = document.querySelectorAll("[data-action=sort]");
 //variables for pop-up 
 let numbersButton = document.getElementById("more-details");
 
-//let studenButton = document.querySelectorAll("")
 
 let studentTemplate = {
     fullname:"",
@@ -29,7 +34,7 @@ function start() {
     loadJSON();
 
     //Add event listeners for filters and sorts
-        houseFilter.addEventListener("change", checkFilter);
+        houseButton.addEventListener("change", checkFilter);
 
         listItems.forEach((listItem) => {
             listItem.addEventListener("click", checkSort);
@@ -79,18 +84,29 @@ function displayStudent(student) {
     //create clone
     const copy = document.querySelector("template#student").content.cloneNode(true);
     //fill template 
-    copy.querySelector("[data-field=firstname]").textContent = student.firstName;
-    copy.querySelector("[data-field=middlename]").textContent = student.middleName;
-    copy.querySelector("[data-field=lastname]").textContent = student.lastName;
-    copy.querySelector("[data-field=nickname]").textContent = student.nickName;
+    copy.querySelector("[data-field=firstName]").textContent = student.firstName;
+    copy.querySelector("[data-field=middleName]").textContent = student.middleName;
+    copy.querySelector("[data-field=lastName]").textContent = student.lastName;
+    copy.querySelector("[data-field=nickName]").textContent = student.nickName;
     copy.querySelector("[data-field=house]").textContent = student.house;
+
+    if (student.expelled == true) {
+    copy.querySelector("[data-field=expelled]").textContent = "✔"; 
+    } else {
+    copy.querySelector("[data-field=expelled]").textContent = "expell"; 
+    }
+
+    copy.querySelector("[data-field=expelled]").addEventListener("click", clickExpell);
+
+    function clickExpell(){
+        student.expelled = ! student.expelled;
+        console.log(student.expelled);
+
+        buildList();
+    }
+
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
-    //append clone
-    document.querySelector("#list tbody").appendChild(copy);
-
-
-
 }
 
 function cleanStudents(students){
@@ -115,7 +131,7 @@ function getItems(student){
         nickName: nameObject.nickName,
         house: studentHouse,
         imageUrl: imageURL,
-        expelled: undefined,
+        expelled: false,
         prefect: undefined,
         squadMember: undefined,
 
@@ -215,33 +231,37 @@ function openNumberPopup(){
 function getNumbers(){
 
 }
-//HIDE POPUPS
 
 //FILTERS 
 function checkFilter(event) {
     //filter = event.target.dataset.filter;
-    houseSelected = houseFilter.selectedIndex;
-    const filteredStudents = filterStudents();
-    displayTable(filteredStudents);
+    const filter = houseButton[houseButton.selectedIndex].value;
+    console.log(filter);
+    setFilter(filter);
 }
 
-function filterStudents() {
+function setFilter(filter){
+settings.filterBy = filter;
+buildList();
+}
+
+function filterStudents(filteredStudents) {
     //console.log(optionSelected);
-    let filteredStudents = [];
-    switch(houseSelected) {
-        case 1:
+    //let filteredStudents = [];
+    switch(settings.filterBy) {
+        case "All":
             filteredStudents = globalStudents.filter(isAll);
             break;
-        case 2:
+        case "Gryffindor":
             filteredStudents = globalStudents.filter(isGryffindor);
             break;
-        case 3:
+        case "Ravenclaw":
             filteredStudents = globalStudents.filter(isRavenclaw);
             break;
-        case 4:
+        case "Hufflepuff":
             filteredStudents = globalStudents.filter(isHufflepuff);
             break;
-        case 5:
+        case "Slytherin":
             filteredStudents = globalStudents.filter(isSlytherin);
             break;
     }
@@ -257,7 +277,7 @@ function isNotExpelled(student) {
 }
 
 function isHufflepuff(student){
-    if(student.house === "hufflepuff" || student.house === "Hufflepuff"){
+    if(student.house === "Hufflepuff"){
         return true;
     }
     else{
@@ -266,7 +286,7 @@ function isHufflepuff(student){
 }
 
 function isGryffindor(student){
-    if(student.house === "gryffindor" || student.house === "Gryffindor"){
+    if(student.house === "Gryffindor"){
         return true;
     }
     else{
@@ -275,7 +295,7 @@ function isGryffindor(student){
 }
 
 function isSlytherin(student){
-    if(student.house === "slytherin" || student.house === "Slytherin"){
+    if(student.house === "Slytherin"){
         return true;
     }
     else{
@@ -284,7 +304,7 @@ function isSlytherin(student){
 }
 
 function isRavenclaw(student){
-    if(student.house === "ravenclaw" || student.house === "Ravenclaw"){
+    if(student.house === "Ravenclaw"){
         return true;
     }
     else{
@@ -297,56 +317,55 @@ function isAll(student){
 
 }
 
-//HOUSE COLOURS AND CREST
-function getHouse(student){
-}
-
-function displayCrestAndColours(house){
-}
-
 //SORTING 
 function checkSort(event) {
 
     const sortBy = event.target.dataset.sort;
     const sortDir = event.target.dataset.sortDirection
 
-    console.log(sortDir);
-
     //toggle direction 
-    if(sortDir === "asc"){
+    if(settings.sortDir === "asc"){
         event.target.dataset.sortDirection = "desc";
     } else {
         event.target.dataset.sortDirection = "asc";
     }
 
-    //get returned value and put in table
-    const sortedStudents = sortStudents(sortBy, sortDir);
-    displayTable(sortedStudents);
-
+    setSort(sortBy, sortDir);
 }
 
-function sortStudents(sortBy, sortDir){
+function setSort(sortBy, sortDir){
+    settings.sortBy = sortBy;
+    settings.sortDir = sortDir;
+    buildList();
+}
+
+function sortStudents(sortedList){
 
     let direction = 1;
-    if(sortDir === "desc") {
+    if(settings.sortDir === "desc") {
         direction = -1
     } else {
         direction = 1;
     }
 
-    let sortedList = globalStudents.sort(sortBySort);
+    sortedList = sortedList.sort(sortBySort);
 
     function sortBySort(studentA, studentB) {
-        if(studentA[sortBy] < studentB[sortBy]) {
+        if(studentA[settings.sortBy] < studentB[settings.sortBy]) {
             return -1 * direction;
             }
             else {
                 return 1 * direction;
             }
     }
-
     return sortedList;
+}
 
+//BUILD LIST 
+function buildList(){
+const currentList = filterStudents(globalStudents);
+const sortedList = sortStudents(currentList);
+displayTable(sortedList);
 }
 
 //HOUSE COLOURS AND CREST 
