@@ -135,6 +135,7 @@ margin: auto;
     border-collapse: collapse;
 }
 
+<<<<<<< HEAD
 #list th {
     padding-top: 12px;
     padding-bottom: 12px;
@@ -161,4 +162,21 @@ tbody tr:hover {
     color: white;
     background-color: rgb(93, 80, 180);
 
+=======
+#number-text-wrapper{
+    position: absolute;
+    margin-left: 3vw;
+    margin-top: 5vw;
+}
+
+table {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+table th,
+tbody tr{
+    border: 1px solid #ddd;
+    padding: 8px;
+>>>>>>> origin/main
 }
