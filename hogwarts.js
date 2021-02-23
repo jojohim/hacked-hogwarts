@@ -4,13 +4,20 @@ window.addEventListener("DOMContentLoaded", start);
 
 let studentsGlobalArray = [];
 let globalStudents = [];
+
+//variables for filtering
+let houseFilter = document.querySelector("#housefilter");
 let houseSelected;
 let statusSelected;
-let sort;
 
-let houseFilter = document.querySelector("#housefilter");
+//variables for sorting
+let sortBy;
 let listItems = document.querySelectorAll("[data-action=sort]");
-console.log(listItems);
+
+//variables for pop-up 
+let numbersButton = document.getElementById("more-details");
+
+//let studenButton = document.querySelectorAll("")
 
 let studentTemplate = {
     fullname:"",
@@ -27,6 +34,11 @@ function start() {
         listItems.forEach((listItem) => {
             listItem.addEventListener("click", checkSort);
         });
+
+    //Event listeners for numbers pop-up
+        numbersButton.addEventListener("click", openNumberPopup);
+
+    //
 }
 
 async function loadJSON() {
@@ -73,13 +85,9 @@ function displayStudent(student) {
     copy.querySelector("[data-field=house]").textContent = student.house;
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
-
-    
-
 }
 
 function cleanStudents(students){
-    console.log(students);
     students.forEach(student => {
     const cleanedStudentObject = getItems(student);
     globalStudents.push(cleanedStudentObject);
@@ -89,7 +97,7 @@ function cleanStudents(students){
 
 function getItems(student){
     const nameObject = splitNames(student.fullname);
-    const studentHouse = cleanItems(student.house).trim();
+    const studentHouse = cleanItems(student.house);
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
 
     return {
@@ -162,19 +170,48 @@ function displayData(students){
     displayTable(students);
     //displayNumbers();
 }
+//SEARCHING
 
-//UNHIDE POPUPS ONCLICK
+function searchForStudent(){
+    let input = document.getElementById("searchbar").value;
+}
+
+//POPUPS
 function openStudentPopup() {
 }
 
-function openNumberPopup(){
+function createModal(student){
+//create copy of template
+const copy = document.querySelector("template#student-popup").content.cloneNode(true);
+//populate copy
+copy.querySelector("h4 #name").innerHTML = student.fullname;
+//append copy
+document.querySelector("#info-wrapper").appendChild(copy);
 }
+
+function openNumberPopup(){
+    //console.log("clicked");
+    let numberPopUp = document.getElementById("number-popup");
+    let closeButton = document.getElementById("close-numbers");
+
+    numberPopUp.style.display = "flex";
+
+    closeButton.addEventListener('click', function() {
+        numberPopUp.style.display = "none";
+    });
+
+
+}
+
+function getNumbers(){
+
+}
+//HIDE POPUPS
 
 //FILTERS 
 function checkFilter(event) {
     //filter = event.target.dataset.filter;
     houseSelected = houseFilter.selectedIndex;
-
     const filteredStudents = filterStudents();
     displayTable(filteredStudents);
 }
@@ -251,68 +288,37 @@ function isAll(student){
 
 }
 
-//HOUSE COLOURS AND CREST 
-function getHouse(student){
-}
-
-function displayCrestAndColours(house){
-}
-
 //SORTING 
 function checkSort(event) {
-    sort = event.target.dataset.sort;
-    console.log(sort);
 
-    const sortedStudents = sortStudents();
+    sortBy = event.target.dataset.sort;
+    const sortedStudents = sortStudents(sortBy);
     displayTable(sortedStudents);
+
 }
 
-function sortStudents(){
+function sortStudents(sortBy){
 
-    let  sortedStudents = [];
-    switch(sort){
-        case "first-name":
-            sortedStudents = globalStudents.sort(sortByFirstName);
-            break;
-        case "middle-name":
-            sortedStudents = globalStudents;
-            break;
-        case "last-name":
-            sortedStudents = globalStudents.sort(sortByLastName);
-            break;
-        case "nickname":
-            sortedStudents = globalStudents;
-            break;
+    let sortedList = globalStudents.sort(sortBySort);
 
-        case "house":
-            sortedStudents = globalStudents;
-            break;
-    }
-
-
-    return sortedStudents;
-
-
-    return sortedStudents;
-}
-
-
-function sortByFirstName(a , b) {
-        if(a.firstName < b.firstName) {
+    function sortBySort(studentA, studentB) {
+        if(studentA[sortBy] < studentB[sortBy]) {
             return -1;
             }
             else {
                 return 1;
             }
+    }
+
+    return sortedList;
+
 }
 
-function sortByLastName(a, b){
-    if(a.lastName < b.lastName) {
-        return -1;
-        }
-        else {
-            return 1;
-        }
+//HOUSE COLOURS AND CREST 
+function getHouse(student){
+}
+
+function displayCrestAndColours(house){
 }
 
 //CHECK FOR EXPELL, SQUAD AND PREFECT

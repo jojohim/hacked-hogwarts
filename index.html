@@ -27,7 +27,7 @@
     <option value="Only non-expelled">Non-expelled</option>
 </select>
 
-<input type="text" id="search-bar" placeholder="Search students..">
+<input type="text" id="searchbar" placeholder="Search students..">
 
 </div>
 
@@ -39,10 +39,10 @@
 <table id="list">
     <thead>
       <tr id="sorting">
-        <th data-action="sort" data-sort-direction="asc" data-sort="first-name">First Name</th>
-        <th data-action="sort" data-sort-direction="asc" data-sort="middle-name">Middle Name</th>
-        <th data-action="sort" data-sort-direction="asc" data-sort="last-name">Last Name</th>
-        <th data-action="sort" data-sort-direction="asc" data-sort="nickname">Nickname</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="firstName">First Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="middleName">Middle Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last Name</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="nickName">Nickname</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
       </tr>
     </thead>
@@ -61,17 +61,15 @@
     </tr>
   </template>
 
-<div id="student-popup" class="hide">
+<template id="student-popup">
+<div id="student-popup">
 <img src="icons/cancel.svg" class="cancel-img">
 <img src="images/granger_h.png" class="student-img">
 <img src="icons/gryffindor.svg" class="house-img">
 
 <div id="info-wrapper">
-<h4>First Name: Hermoine</h4>
-<h4>Middle Name: N/A</h4>
-<h4>Last Name: Granger</h4>
-<h4>Nickname: N/A</h4>
-<h4>Other Info: not expelled, prefect</h4>
+<h4 id="name">Hermoine Granger</h4>
+<h4 id="other">Other Info: not expelled, prefect</h4>
 </div>
 
 <div id="button-section">
@@ -79,10 +77,10 @@
     <button>Expell</button>
     <button>Add to Squad</button>
 </div>
-
 </div>
+</template>
 
-<div id="number-popup" class="hide">
+<div id="number-popup">
 <div id="number-text-wrapper">
 <p>Total students: 124938</p>
 <p>Expelled students: 124938</p>
@@ -90,7 +88,7 @@
 <p>Slytherin students: 124938</p>
 <p>Total students: 124938</p>
 </div>
-<img src="icons/cancel.svg" class="cancel-img">
+<img src="icons/cancel.svg" class="cancel-img" id="close-numbers">
 </div>
 
 </div>
