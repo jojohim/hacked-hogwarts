@@ -4,7 +4,6 @@ window.addEventListener("DOMContentLoaded", start);
 
 let studentsGlobalArray = [];
 let globalStudents = [];
-<<<<<<< HEAD
 
 //variables for filtering
 let houseFilter = document.querySelector("#housefilter");
@@ -25,9 +24,6 @@ let studentTemplate = {
     gender:"",
     house: "",
 }
-=======
-let filter;
->>>>>>> origin/main
 
 let studentTemplate = {
     fullname:"",
@@ -38,7 +34,6 @@ let studentTemplate = {
 function start() {
     loadJSON();
 
-<<<<<<< HEAD
     //Add event listeners for filters and sorts
         houseFilter.addEventListener("change", checkFilter);
 
@@ -49,8 +44,6 @@ function start() {
     //Event listeners for numbers pop-up
         numbersButton.addEventListener("click", openNumberPopup);
 
-    //
-=======
     //Add event listeners for filters, etc
 >>>>>>> origin/main
 }
@@ -96,14 +89,9 @@ function displayStudent(student) {
     copy.querySelector("[data-field=middlename]").textContent = student.middleName;
     copy.querySelector("[data-field=lastname]").textContent = student.lastName;
     copy.querySelector("[data-field=nickname]").textContent = student.nickName;
-<<<<<<< HEAD
     copy.querySelector("[data-field=house]").textContent = student.house;
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
-}
-
-function cleanStudents(students){
-=======
     //append clone
     document.querySelector("#list tbody").appendChild(copy);
 
@@ -113,7 +101,7 @@ function cleanStudents(students){
 
 function cleanStudents(students){
     console.log(students);
->>>>>>> origin/main
+
     students.forEach(student => {
     const cleanedStudentObject = getItems(student);
     globalStudents.push(cleanedStudentObject);
@@ -123,11 +111,8 @@ function cleanStudents(students){
 
 function getItems(student){
     const nameObject = splitNames(student.fullname);
-<<<<<<< HEAD
     const studentHouse = cleanItems(student.house);
-=======
     const studentHouse = cleanItems(student.house).trim();
->>>>>>> origin/main
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
 
     return {
@@ -137,12 +122,10 @@ function getItems(student){
         nickName: nameObject.nickName,
         house: studentHouse,
         imageUrl: imageURL,
-<<<<<<< HEAD
         expelled: undefined,
         prefect: undefined,
         squadMember: undefined,
-=======
->>>>>>> origin/main
+
     }
 }
 
