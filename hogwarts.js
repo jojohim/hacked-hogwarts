@@ -11,7 +11,6 @@ let houseSelected;
 let statusSelected;
 
 //variables for sorting
-let sortBy;
 let listItems = document.querySelectorAll("[data-action=sort]");
 
 //variables for pop-up 
@@ -25,11 +24,6 @@ let studentTemplate = {
     house: "",
 }
 
-let studentTemplate = {
-    fullname:"",
-    gender:"",
-    house: "",
-}
 
 function start() {
     loadJSON();
@@ -45,7 +39,7 @@ function start() {
         numbersButton.addEventListener("click", openNumberPopup);
 
     //Add event listeners for filters, etc
->>>>>>> origin/main
+
 }
 
 async function loadJSON() {
@@ -111,7 +105,6 @@ function cleanStudents(students){
 
 function getItems(student){
     const nameObject = splitNames(student.fullname);
-    const studentHouse = cleanItems(student.house);
     const studentHouse = cleanItems(student.house).trim();
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
 
@@ -314,22 +307,41 @@ function displayCrestAndColours(house){
 //SORTING 
 function checkSort(event) {
 
-    sortBy = event.target.dataset.sort;
-    const sortedStudents = sortStudents(sortBy);
+    const sortBy = event.target.dataset.sort;
+    const sortDir = event.target.dataset.sortDirection
+
+    console.log(sortDir);
+
+    //toggle direction 
+    if(sortDir === "asc"){
+        event.target.dataset.sortDirection = "desc";
+    } else {
+        event.target.dataset.sortDirection = "asc";
+    }
+
+    //get returned value and put in table
+    const sortedStudents = sortStudents(sortBy, sortDir);
     displayTable(sortedStudents);
 
 }
 
-function sortStudents(sortBy){
+function sortStudents(sortBy, sortDir){
+
+    let direction = 1;
+    if(sortDir === "desc") {
+        direction = -1
+    } else {
+        direction = 1;
+    }
 
     let sortedList = globalStudents.sort(sortBySort);
 
     function sortBySort(studentA, studentB) {
         if(studentA[sortBy] < studentB[sortBy]) {
-            return -1;
+            return -1 * direction;
             }
             else {
-                return 1;
+                return 1 * direction;
             }
     }
 
