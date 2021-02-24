@@ -90,6 +90,7 @@ function displayStudent(student) {
     copy.querySelector("[data-field=nickName]").textContent = student.nickName;
     copy.querySelector("[data-field=house]").textContent = student.house;
 
+    //EXPELL STUDENT TOGGLE 
     if (student.expelled == true) {
     copy.querySelector("[data-field=expelled]").textContent = "✔"; 
     } else {
@@ -105,10 +106,73 @@ function displayStudent(student) {
         buildList();
     }
 
+    //MAKE PREFECT TOGGLE
+    copy.querySelector("[data-field=prefect]").dataset.prefect = student.prefect;
+    copy.querySelector("[data-field=prefect]").addEventListener("click", clickPrefect);
+
+    function clickPrefect(){
+    if (student.prefect === true){
+        student.prefect = false;
+    } else{
+        tryToMakePrefect(student);
+    }
+    buildList();
+}
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
 }
 
+function tryToMakePrefect(selectedStudent){
+
+    const prefects = globalStudents.filter(student => student.prefect);
+    const numberOfPrefects = prefects.length;
+    const other = prefects.filter(student => student.gender === selectedStudent.gender).shift();
+
+    //if there is another of the same type 
+    console.log(other);
+    if(other !== undefined) {
+        removeOther(other);
+    } else if(numberOfPrefects >= 2){
+        removeAorB(prefects[0], prefects[1]);
+    } else {
+        makePrefect(selectedStudent);
+    }
+
+    //just for testing 
+    makePrefect(selectedStudent);
+
+    function removeOther(other){
+
+    //ask user to ignore or remove the other 
+    //if ignore - do nothing 
+    //if remove other 
+    removePrefect(other);
+    makePrefect(selectedStudent);
+    }
+
+    function removeAorB(prefectA, prefectB){
+    //ask user to ignore or remove a or b
+    //if ignore - do nothing
+    //if remove A: 
+    removePrefect(prefectA);
+    makePrefect(selectedStudent);
+    //if remove B:
+    console.log(prefectB.prefect);
+    removePrefect(prefectB);
+    makePrefect(selectedStudent);
+
+    }
+
+function removePrefect(prefectStudent){
+    prefectStudent.prefect = false;
+}
+
+function makePrefect(student){
+    console.log("making student prefect")
+    student.prefect = true;
+}
+
+}
 function cleanStudents(students){
     console.log(students);
 
@@ -122,6 +186,7 @@ function cleanStudents(students){
 function getItems(student){
     const nameObject = splitNames(student.fullname);
     const studentHouse = cleanItems(student.house).trim();
+    const studentGender = student.gender;
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
 
     return {
@@ -131,10 +196,10 @@ function getItems(student){
         nickName: nameObject.nickName,
         house: studentHouse,
         imageUrl: imageURL,
+        gender: studentGender,
         expelled: false,
-        prefect: undefined,
+        prefect: false,
         squadMember: undefined,
-
     }
 }
 

@@ -1,0 +1,12 @@
+FOR PREFECT 
+1. Model 
+-- add prefect status to student 
+2. View
+-- make prefect visible in table 
+-- get prefect status from the model, display it in table
+3. Controller 
+-- add toggle to each student to make/remove prefect 
+-- Implement rules 
+    -- first try with prefect cannot exceed a length of 2 
+    -- then try with genders cannot be the same 
+-- Add user interface to rules, give options to remove or ignore 

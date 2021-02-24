@@ -156,3 +156,15 @@ tr th:hover {
 #expelled {
     text-align: center;
 }
+
+td[data-field=prefect][data-prefect=true]::after{
+    content: "🌟";
+}
+
+td[data-field=prefect][data-prefect=false]::after{
+    content: "add";
+}
+
+td[data-field=prefect]{
+    text-align: center;
+}
