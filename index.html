@@ -12,19 +12,13 @@
 <div id="top-bar" class="inline">
 
 <select id="housefilter">
-    <option value="none" selected disabled hidden>Filter by house</option>
+    <option value="none" selected disabled hidden>Filter Students</option>
     <option value="All" class="housefilter" data-action="filter" data-filter="All">Show All</option>
     <option value="Gryffindor" class="housefilter" data-action="filter" data-filter="Gyffindor">Gryffindor</option>
     <option value="Ravenclaw" class="housefilter" data-action="filter" data-filter="Ravenclaw">Ravenclaw</option>
     <option value="Hufflepuff" class="housefilter" data-action="filter" data-filter="Hufflepuff">Hufflepuff</option>
     <option value="Slytherin" class="housefilter" data-action="filter" data-filter="Slytherin">Slytherin</option>
-</select>
-
-<select id="expelled-filter">
-    <option value="none" selected disabled hidden>Filter by student status</option>
-    <option value="all">Show All</option>
-    <option value="Only Expelled">Expelled</option>
-    <option value="Only non-expelled">Non-expelled</option>
+    <option value="Expelled" class="housefilter" data-action="filter" data-filter="Expelled">Expelled Only</option>
 </select>
 
 <input type="text" id="searchbar" placeholder="Search students..">
@@ -67,7 +61,7 @@
     </tr>
   </template>
 
-<template id="student-popup">
+<div id="student-popup">
 <div id="student-popup">
 <img src="icons/cancel.svg" class="cancel-img">
 <img src="images/granger_h.png" class="student-img">
@@ -78,14 +72,8 @@
 <h4 id="other">Other Info: not expelled, prefect</h4>
 </div>
 
-<div id="button-section">
-    <button>Make Prefect</button>
-    <button>Expell</button>
-    <button>Add to Squad</button>
 </div>
-
 </div>
-</template>
 
 <div id="number-popup">
 <div id="number-text-wrapper">

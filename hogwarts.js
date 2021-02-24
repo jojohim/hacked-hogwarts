@@ -231,8 +231,9 @@ function openNumberPopup(){
 function getNumbers(){
 
 }
+//FILTERS EXPELLED
 
-//FILTERS 
+//FILTERS HOUSE 
 function checkFilter(event) {
     //filter = event.target.dataset.filter;
     const filter = houseButton[houseButton.selectedIndex].value;
@@ -246,8 +247,7 @@ buildList();
 }
 
 function filterStudents(filteredStudents) {
-    //console.log(optionSelected);
-    //let filteredStudents = [];
+
     switch(settings.filterBy) {
         case "All":
             filteredStudents = globalStudents.filter(isAll);
@@ -264,6 +264,8 @@ function filterStudents(filteredStudents) {
         case "Slytherin":
             filteredStudents = globalStudents.filter(isSlytherin);
             break;
+        case "Expelled":
+            filteredStudents = globalStudents.filter(isExpelled);
     }
 
 return filteredStudents;
@@ -271,9 +273,12 @@ return filteredStudents;
 }
 
 function isExpelled(student) {    
-}
-
-function isNotExpelled(student) {    
+    if(student.expelled === true){
+        return true;
+    }
+    else{
+        return false;
+    }
 }
 
 function isHufflepuff(student){
