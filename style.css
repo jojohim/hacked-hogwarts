@@ -1,13 +1,32 @@
 /*FONTS*/
+
+
 *{
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
 
 body {
     position: relative;
+    background-image: url("background/paper.jpg");
+    background-size: cover;
 }
 
+/*****LOGO AND TITLE*****/
+
+#title-wrapper h1{
+text-align: center;
+margin-top: 3vw;
+}
+
+#logo {
+    float: left;
+    margin-top: -2vw;
+    height:7vw;
+    min-height: 75px;
+
+}
 /*CLASSES*/
+
 .hide {
     visibility: hidden;
 }
@@ -80,7 +99,6 @@ height: 40px;
 
 .house-border {
     border: 10px solid;
-    border-color: rgb(209, 195, 0);
 }
 
 /*******TABLE STYLING********/
@@ -96,7 +114,8 @@ height: 40px;
     padding-top: 12px;
     padding-bottom: 12px;
     text-align: left;
-    background-color: rgb(51, 44, 102);
+    /*background-color: rgb(51, 44, 102);*/
+    background-color: #ad915b;
     color: white;
   }
 
@@ -111,7 +130,10 @@ tbody tr  {
 }
 
 tbody tr:nth-child(even){
-    background-color: #f2f2f2;
+    background-color: #f0eae0;
+}
+tbody tr:nth-child(odd){
+    background-color: white;
 }
 tbody tr:hover {
     cursor: pointer;
@@ -155,7 +177,7 @@ td[data-field=prefect]{
     box-shadow: 1px 1px 10px rgb(54, 54, 54);
     border-radius: 12px;
     padding: 2em;
-    background-color: #efefef;
+    background-color: #f7ede1;
     position: relative;
   }
   

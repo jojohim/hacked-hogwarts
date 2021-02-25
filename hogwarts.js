@@ -207,7 +207,7 @@ function tryToMakePrefect(selectedStudent){
     function removeOther(other){
     //ask user to ignore or remove the other 
     document.querySelector("#remove_other").classList.remove("hide");
-    document.querySelector("#remove_other #removeother").innerHTML = `remove ${other.firstName}`;
+    document.querySelector("#remove_other #removeother").innerHTML = `remove ${other.firstName} as prefect`;
     document.querySelector("#remove_other .closebutton").addEventListener("click", closeDialog);
     document.querySelector("#remove_other #removeother").addEventListener("click", clickRemoveOther);
 
@@ -248,6 +248,7 @@ function cleanStudents(students){
 
 function getItems(student){
     const nameObject = splitNames(student.fullname);
+    //const studentHouse = student.house;
     const studentHouse = cleanItems(student.house).trim();
     const studentGender = student.gender;
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
@@ -312,10 +313,12 @@ function cleanItems(item){
         // Split names into two names (easier to handle)
         const hypenNames = itemWithoutQuotationMarks.split('-');
 
+
         // Combine names + add uppercase to the latter name in the hyphen
         itemWithoutQuotationMarks = `${hypenNames[0]}-${hypenNames[1].charAt(0).toUpperCase()}${hypenNames[1].slice(1)}`
         return itemWithoutQuotationMarks;
-    }
+    } 
+
     return `${itemWithoutQuotationMarks.charAt(0).toUpperCase()}${itemWithoutQuotationMarks.slice(1).toLowerCase()}`;
 }
 
@@ -451,7 +454,6 @@ function isRavenclaw(student){
 
 function isAll(student){
     return true;
-
 }
 
 //SORTING 
@@ -503,14 +505,7 @@ function buildList(){
 const currentList = filterStudents(globalStudents);
 const sortedList = sortStudents(currentList);
 displayTable(sortedList);
-}
-
-//HOUSE COLOURS AND CREST 
-function getHouse(student){
-}
-
-function displayCrestAndColours(house){
-}
+} 
 
 //CHECK FOR EXPELL, SQUAD AND PREFECT
 function checkDetails() {
@@ -538,6 +533,6 @@ function displayNumbers(){
 function getNumbers(){
 }
 
-//HACKING
+//HACKING HACK HACK
 
 
