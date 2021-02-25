@@ -40,7 +40,7 @@ function start() {
         });
 
     //Event listeners for numbers pop-up
-        numbersButton.addEventListener("click", openNumberPopup);
+        numbersButton.addEventListener("click", openNumberDialog);
 
     //Add event listeners for filters, etc
 
@@ -81,13 +81,13 @@ function displayTable(students) {
 }
 
 function displayStudent(student) {
-    //create clone
+    //create clone 
     const copy = document.querySelector("template#student").content.cloneNode(true);
     //fill template 
-    copy.querySelector("[data-field=firstName]").textContent = student.firstName;
+    copy.querySelector("[data-field=firstName]").textContent = `${student.firstName} >` ; 
     copy.querySelector("[data-field=middleName]").textContent = student.middleName;
     copy.querySelector("[data-field=lastName]").textContent = student.lastName;
-    copy.querySelector("[data-field=nickName]").textContent = student.nickName;
+    copy.querySelector("[data-field=nickName]").textContent = student.nickName; 
     copy.querySelector("[data-field=house]").textContent = student.house;
 
     //EXPELL STUDENT TOGGLE 
@@ -122,10 +122,55 @@ function displayStudent(student) {
         tryToMakePrefect(student);
     }
     buildList();
-}
+    }
+    //OPEN STUDENT DIALOG 
+    //add eventlistener to open dialog 
+    copy.querySelector("[data-field=firstName]").addEventListener("click", clickStudent);
+    //grab selectedStudent and send student info to display dialog 
+    function clickStudent(){
+    openStudentPopup(student);
+    }
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
 }
+
+function openStudentPopup(selectedStudent) {
+    //show student popup 
+    document.getElementById("student-dialog").classList.remove("hide");
+    //change student info 
+        //set image 
+    document.querySelector(".student-img").src = `images/${selectedStudent.imageUrl}`;
+
+        //set info
+    document.querySelector("#fullname").innerHTML = `${selectedStudent.firstName} ${selectedStudent.lastName}`;
+
+        //set student colours and crest
+    document.querySelector(".crest").src = `icons/${selectedStudent.house}.svg`;
+
+    if(selectedStudent.house == "Slytherin"){
+        document.querySelector(".house-border").style.borderColor = "rgb(37, 117, 0)";
+        document.querySelector(".crest").style.borderColor = "rgb(37, 117, 0)";
+    } else if(selectedStudent.house == "Gryffindor"){
+        document.querySelector(".house-border").style.borderColor = "rgb(117, 0, 0)";
+        document.querySelector(".crest").style.borderColor = "rgb(117, 0, 0)";
+    } else if(selectedStudent.house == "Ravenclaw"){
+        document.querySelector(".house-border").style.borderColor = "rgb(0, 80, 117)";
+        document.querySelector(".crest").style.borderColor = "rgb(0, 80, 117)";
+    } else if(selectedStudent.house == "Hufflepuff"){
+        document.querySelector(".house-border").style.borderColor = "rgb(209, 195, 0)";
+        document.querySelector(".crest").style.borderColor = "rgb(209, 195, 0)";
+    }
+
+    // close window on click
+    document.querySelector("#student-dialog .closebutton").addEventListener("click", closeStudentPopup);
+
+    function closeStudentPopup(){
+        document.getElementById("student-dialog").classList.add("hide");
+        document.querySelector("#student-dialog .closebutton").removeEventListener("click", closeStudentPopup);
+    }
+
+}
+
 
 function tryToExpell(selectedStudent){
 document.querySelector("#expell-dialog").classList.remove("hide");
@@ -144,7 +189,6 @@ function closeExpellDialog(){
     document.querySelector("#expell-dialog").classList.add("hide");
 }
 }
-
 
 function tryToMakePrefect(selectedStudent){
 
@@ -191,6 +235,7 @@ function makePrefect(student){
 }
 
 }
+
 function cleanStudents(students){
     console.log(students);
 
@@ -285,24 +330,39 @@ function searchForStudent(){
 }
 
 //POPUPS
-function openStudentPopup() {
+
+function openNumberDialog(){
+    //show number dialog 
+    document.getElementById("number-dialog").classList.remove("hide");
+    document.querySelector("#number-dialog .closebutton").addEventListener("click", closeNumbers);
+
+    //Set content of dialog
+    let expelledStudents = globalStudents.filter(student => student.expelled);
+    document.getElementById("expelled-number").innerHTML = `Expelled students: ${expelledStudents.length}`;
+
+    let totalStudents = globalStudents.length;
+    document.getElementById("total-number").innerHTML = `Total students: ${totalStudents}`;
+
+    let gryffindorStudents = globalStudents.filter(student => student.house === "Gryffindor");
+    document.getElementById("gryffindor-number").innerHTML = `Gryffindor students: ${gryffindorStudents.length}`;
+
+    let slytherinStudents = globalStudents.filter(student => student.house === "Slytherin");
+    document.getElementById("slytherin-number").innerHTML = `Slytherin students: ${slytherinStudents.length}`;
+
+    let hufflepuffStudents = globalStudents.filter(student => student.house === "Hufflepuff");
+    document.getElementById("hufflepuff-number").innerHTML = `Hufflepuff students: ${hufflepuffStudents.length}`;
+
+    let ravenclawStudents = globalStudents.filter(student => student.house === "Ravenclaw");
+    document.getElementById("ravenclaw-number").innerHTML = `Ravenclaw students: ${ravenclawStudents.length}`;
+
+
+    //close numbers dialog
+    function closeNumbers(){
+        document.getElementById("number-dialog").classList.add("hide");
+        document.querySelector("#number-dialog .closebutton").removeEventListener("click", closeNumbers);
+    }
 }
 
-function openNumberPopup(){
-    //console.log("clicked");
-    let numberPopUp = document.getElementById("number-popup");
-    let closeButton = document.getElementById("close-numbers");
-
-    numberPopUp.style.display = "flex";
-
-    closeButton.addEventListener('click', function() {
-        numberPopUp.style.display = "none";
-    });
-}
-
-function getNumbers(){
-
-}
 //FILTERS EXPELLED
 
 //FILTERS HOUSE 

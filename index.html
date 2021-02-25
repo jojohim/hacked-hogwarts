@@ -49,7 +49,7 @@
   </table>
 
   <template id="student">
-    <tr>
+    <tr data-field="student-row">
       <td data-field="firstName">FIRST NAME</td>
       <td data-field="middleName">MIDDLE NAME</td>
       <td data-field="lastName">LAST NAME</td>
@@ -61,34 +61,36 @@
     </tr>
   </template>
 
-<div id="student-popup">
-<div id="student-popup">
-<img src="icons/cancel.svg" class="cancel-img">
+<div id="student-dialog" class="modal hide">
+  <div class="dialog house-border">
+<button class="closebutton">✕</button>
+<img src="icons/gryffindor.svg" class="crest"><br>
 <img src="images/granger_h.png" class="student-img">
-<img src="icons/gryffindor.svg" class="house-img">
 
 <div id="info-wrapper">
-<h4 id="name">Hermoine Granger</h4>
-<h4 id="other">Other Info: not expelled, prefect</h4> 
+<h4 id="fullname">Hermoine Granger</h4>
+<h4 id="otherInfo">Other Info: not expelled, prefect</h4> 
+<h4 id="bloodStatus">Blood status: half-blood</h4> 
+</div>
+</div>
 </div>
 
-</div>
-</div>
-
-<div id="number-popup">
-<div id="number-text-wrapper">
-<p>Total students: 124938</p>
-<p>Expelled students: 124938</p>
-<p>Gryffindor students: 124938</p>
-<p>Slytherin students: 124938</p>
-<p>Total students: 124938</p>
-</div>
-<img src="icons/cancel.svg" class="cancel-img" id="close-numbers">
+<div id="number-dialog" class="modal hide">
+  <div class="dialog">
+    <button class="closebutton">✕</button> 
+    <h1>Numbers</h1>
+    <p id="total-number"><strong>Total students: 124938</strong></p> 
+  <p id="expelled-number">Expelled students: 124938</p>
+  <p id="gryffindor-number">Gryffindor students: 124938</p>
+  <p id="slytherin-number">Slytherin students: 124938</p>
+  <p id="hufflepuff-number">Hufflepuff students: 124938</p>
+  <p id="ravenclaw-number">Ravenclaw students: 124938</p>
+  </div>
 </div>
 
 <div id="remove_other" class="modal hide">
   <div class="dialog">
-    <button class="closebutton">X</button>
+    <button class="closebutton">✕</button>
     <h1>Warning!</h1>
     <p>Only one student of each gender can be prefect<br>
     and there can only be two in total.<br><br>
@@ -99,7 +101,7 @@
 
 <div id="expell-dialog" class="modal hide">
   <div class="dialog">
-    <button class="closebutton">X</button>
+    <button class="closebutton">✕</button>
     <h1>Warning!</h1>
     <p>Expelling this student will remove them from this list<br><br>
     Do you want to expell this student?</p>

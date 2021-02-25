@@ -50,19 +50,7 @@ select:hover {
     cursor: pointer;
 }
 
-/*STUDENT POP-UP WINDOW*/
-
-#student-popup {
-    position: absolute;
-    display: none;
-    top: 5%;
-    left: 27%;
-    height: 500px;
-    min-width: 350px;
-    width: 40%;
-    border-radius: 2vw ;
-    background: #efefef;
-}
+/*STUDENT DIALOG WINDOW*/
 
 .cancel-img {
     position: absolute;
@@ -71,49 +59,31 @@ select:hover {
 height: 40px;
 }
 
-.cancel-img:hover {
-    cursor: pointer;
-    opacity: 75%;
+
+/********STUDENT POP-UP WINDOW*********/
+
+.student-img{
+    height: 120px;
+    margin-top: 20px;
 }
 
-.student-img {
-    border: 10px solid darkred;
-    border-radius: 2vw;
-    margin: 1vw auto;
-    height: 40%;
-    min-height: 100px;
+#fullname {
+    text-align: center;
+}
+.crest {
+    margin: -20px;
+    height: 50px;
+    padding: 4px;
+    border: 2px solid;
+    border-radius: 50%;
 }
 
-.house-img {
-    position: absolute;
-    top: 1.5vw;
-    left: 1vw;
-    height: 3.5vw;
+.house-border {
+    border: 10px solid;
+    border-color: rgb(209, 195, 0);
 }
 
-#info-wrapper{
-    position: absolute;
-    top: 55%;
-    left: 30%;
-}
-
-
-/*NUMBERS POP-UP WINDOW*/
-
-#number-popup {
-    border-radius: 10%;
-    display: none;
-    position: absolute;
-    left: 40%;
-    top: 15%;
-    min-height: 400px;
-    min-width: 300px;
-    background-color: rgb(228, 226, 245);  
-}
-
-#number-text-wrapper{
-margin: auto;
-}
+/*******TABLE STYLING********/
 
 #list {
     margin-left: auto;
@@ -169,7 +139,7 @@ td[data-field=prefect]{
     text-align: center;
 }
 /***********DIALOG BOX*************/
-.modal {
+ .modal {
     position: fixed;
     top: 0;
     left: 0;
@@ -191,10 +161,10 @@ td[data-field=prefect]{
   
   button.closebutton{
     position: absolute;
-    right: -1vw;
-    top: -1vw;
-    width: 2em;
-    height: 2em;
+    right: -0.5vw;
+    top: -0.5vw;
+    width: 2.5em;
+    height: 2.5em;
     border-radius: 50%;
     border: 1px solid black;
   }
