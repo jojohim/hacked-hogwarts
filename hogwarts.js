@@ -29,7 +29,6 @@ let studentTemplate = {
     house: "",
 }
 
-
 function start() {
     loadJSON();
 
@@ -76,6 +75,7 @@ function prepareObject(jsonObject){
 function displayTable(students) {
     //clear list
     document.querySelector("#list tbody").innerHTML = "";
+    document.getElementById("current-no").innerHTML =`There's currently ${students.length} students showing`;
     //create new list for each student
     students.forEach(displayStudent);
 }
@@ -100,9 +100,14 @@ function displayStudent(student) {
     copy.querySelector("[data-field=expelled]").addEventListener("click", clickExpell);
 
     function clickExpell(){
-        student.expelled = ! student.expelled;
-        console.log(student.expelled);
+        if (student.expelled === true){
+            student.expelled = false;
+        }
+        else{
+            tryToExpell(student);
+        }
 
+        //student.expelled = ! student.expelled;
         buildList();
     }
 
@@ -122,6 +127,25 @@ function displayStudent(student) {
     document.querySelector("#list tbody").appendChild(copy);
 }
 
+function tryToExpell(selectedStudent){
+document.querySelector("#expell-dialog").classList.remove("hide");
+document.querySelector("#expellstudent").addEventListener("click", clickExpellStudent);
+document.querySelector("#expell-dialog .closebutton").addEventListener("click", closeExpellDialog);
+
+function clickExpellStudent(){
+    selectedStudent.expelled = true;
+    const onlyNonExpelled = globalStudents.filter(student => student.expelled === false);
+    closeExpellDialog();
+    displayData(onlyNonExpelled);
+}
+
+function closeExpellDialog(){
+    console.log("closebutton clicked");
+    document.querySelector("#expell-dialog").classList.add("hide");
+}
+}
+
+
 function tryToMakePrefect(selectedStudent){
 
     const prefects = globalStudents.filter(student => student.prefect);
@@ -129,38 +153,32 @@ function tryToMakePrefect(selectedStudent){
     const other = prefects.filter(student => student.gender === selectedStudent.gender).shift();
 
     //if there is another of the same type 
-    console.log(other);
     if(other !== undefined) {
         removeOther(other);
-    } else if(numberOfPrefects >= 2){
-        removeAorB(prefects[0], prefects[1]);
-    } else {
+    } 
+    else {
         makePrefect(selectedStudent);
     }
 
-    //just for testing 
-    makePrefect(selectedStudent);
-
     function removeOther(other){
-
     //ask user to ignore or remove the other 
+    document.querySelector("#remove_other").classList.remove("hide");
+    document.querySelector("#remove_other #removeother").innerHTML = `remove ${other.firstName}`;
+    document.querySelector("#remove_other .closebutton").addEventListener("click", closeDialog);
+    document.querySelector("#remove_other #removeother").addEventListener("click", clickRemoveOther);
+
     //if ignore - do nothing 
+    function closeDialog(){
+    document.querySelector("#remove_other").classList.add("hide");
+    document.querySelector("#remove_other .closebutton").removeEventListener("click", closeDialog);
+    }
     //if remove other 
+    function clickRemoveOther(){
     removePrefect(other);
     makePrefect(selectedStudent);
+    buildList();
+    closeDialog();
     }
-
-    function removeAorB(prefectA, prefectB){
-    //ask user to ignore or remove a or b
-    //if ignore - do nothing
-    //if remove A: 
-    removePrefect(prefectA);
-    makePrefect(selectedStudent);
-    //if remove B:
-    console.log(prefectB.prefect);
-    removePrefect(prefectB);
-    makePrefect(selectedStudent);
-
     }
 
 function removePrefect(prefectStudent){
@@ -270,15 +288,6 @@ function searchForStudent(){
 function openStudentPopup() {
 }
 
-function createModal(student){
-//create copy of template
-const copy = document.querySelector("template#student-popup").content.cloneNode(true);
-//populate copy
-copy.querySelector("h4 #name").innerHTML = student.fullname;
-//append copy
-document.querySelector("#info-wrapper").appendChild(copy);
-}
-
 function openNumberPopup(){
     //console.log("clicked");
     let numberPopUp = document.getElementById("number-popup");
@@ -289,8 +298,6 @@ function openNumberPopup(){
     closeButton.addEventListener('click', function() {
         numberPopUp.style.display = "none";
     });
-
-
 }
 
 function getNumbers(){

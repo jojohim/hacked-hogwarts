@@ -9,7 +9,7 @@ body {
 
 /*CLASSES*/
 .hide {
-    display: none;
+    visibility: hidden;
 }
 
 /*TOP BAR*/
@@ -168,3 +168,37 @@ td[data-field=prefect][data-prefect=false]::after{
 td[data-field=prefect]{
     text-align: center;
 }
+/***********DIALOG BOX*************/
+.modal {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background-color: rgba(0,0,0,.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+  }
+
+  .dialog {
+    box-shadow: 1px 1px 10px rgb(54, 54, 54);
+    border-radius: 12px;
+    padding: 2em;
+    background-color: #efefef;
+    position: relative;
+  }
+  
+  button.closebutton{
+    position: absolute;
+    right: -1vw;
+    top: -1vw;
+    width: 2em;
+    height: 2em;
+    border-radius: 50%;
+    border: 1px solid black;
+  }
+
+  button:hover{
+      cursor: pointer;
+  }
