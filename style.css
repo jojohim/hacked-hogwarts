@@ -133,16 +133,15 @@ tbody tr:nth-child(even){
 tbody tr:nth-child(odd){
     background-color: white;
 }
-tbody tr:hover {
-    cursor: pointer;
-    background-color: rgb(221, 219, 233);
-
-}
 
 tr th:hover {
     cursor: pointer;
 }
 
+td[data-field=firstName]:hover {
+    cursor: pointer;
+    text-decoration: underline;
+}
 td[data-field=prefect][data-prefect=true]::after{
     content: "🌟";
 }
@@ -155,7 +154,13 @@ td[data-field=prefect],
 td[data-field=expelled],
 td[data-field=squad-member]{
     text-align: center;
+    font-weight: 600;
+}
 
+td[data-field=prefect]:hover,
+td[data-field=expelled]:hover,
+td[data-field=squad-member]:hover{
+    cursor: pointer;
 }
 
 /***********DIALOG BOX*************/

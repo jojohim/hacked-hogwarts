@@ -39,6 +39,7 @@ let studentTemplate = {
     house: "",
 }
 
+//////////GET JSON OBJECTS////////////
 function start() {
     loadJSON();
 
@@ -56,8 +57,6 @@ function start() {
 
     //Event listeners for numbers pop-up
     numbersButton.addEventListener("click", openNumberDialog);
-
-    //Add event listeners for filters, etc
 }
 
 async function loadJSON() {
@@ -77,7 +76,7 @@ function prepareObjects(jsonData) {
     studentsGlobalArray = jsonData.map(prepareObject);
     // call clean students to then call for each 
     cleanStudents(studentsGlobalArray);
-    displayData(globalStudents);
+    displayTable(globalStudents);
 }
 
 function prepareObject(jsonObject){
@@ -90,6 +89,7 @@ function prepareObject(jsonObject){
  return student;
 }
 
+//////////DISPLAY JSON OBJECTS ON PAGE////////////
 function displayTable(students) {
     //clear list
     document.querySelector("#list tbody").innerHTML = "";
@@ -144,6 +144,7 @@ function displayStudent(student) {
     document.querySelector("#list tbody").appendChild(copy);
 }
 
+//////////INQUISITORIAL SQUAD////////////
 function assignToSquad(student) {
     // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
 
@@ -176,16 +177,8 @@ function assignToSquad(student) {
     }
 }
 
-function clickPrefect(student){
-    // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
 
-    if (student.prefect === true){
-        student.prefect = false;
-    } else{
-        tryToMakePrefect(student);
-    }
-    buildList();
-}
+//////////EXPELL STUDENTS////////////
 
 function expellStudent(student){
     if (student.expelled === true){
@@ -198,6 +191,34 @@ function expellStudent(student){
     // student.expelled =! student.expelled;
 }
 
+function tryToExpell(selectedStudent){
+    document.querySelector("#expell-dialog").classList.remove("hide");
+
+    if (selectedStudent.nickName === 'JOJO') {
+        document.querySelector("#expell-dialog .generic").classList.add("hide");
+        document.querySelector("#expell-dialog .awesome-student").classList.remove("hide");
+    } else {
+        document.querySelector("#expell-dialog .generic").classList.remove("hide");
+        document.querySelector("#expell-dialog .awesome-student").classList.add("hide");
+    }
+
+    document.querySelector("#expellstudent").addEventListener("click", clickExpellStudent);
+    document.querySelector("#expell-dialog .closebutton").addEventListener("click", closeExpellDialog);
+
+    function clickExpellStudent() {
+        selectedStudent.expelled = true;
+        const onlyNonExpelled = globalStudents.filter(student => student.expelled === false);
+        closeExpellDialog();
+        displayTable(onlyNonExpelled);
+    }
+
+    function closeExpellDialog(){
+        console.log("closebutton clicked");
+        document.querySelector("#expell-dialog").classList.add("hide");
+    }
+}
+
+//////////STUDENT POPUP////////////
 
 function openStudentPopup(selectedStudent) {
     //show student popup 
@@ -208,8 +229,19 @@ function openStudentPopup(selectedStudent) {
 
     // Set info
     document.querySelector("#fullname").innerHTML = `${selectedStudent.firstName} ${selectedStudent.lastName}`;
+    console.log(selectedStudent);
+
+    if(selectedStudent.squadMember == "Yes"){
+        document.querySelector("#squadmember").innerHTML = `Yes`;
+    } else{
+        document.querySelector("#squadmember").innerHTML = `No`;
+    }
+
+
+
     document.querySelector("#prefect").innerHTML = `${selectedStudent.prefect}`;
     document.querySelector("#expelled").innerHTML = `${selectedStudent.expelled}`;
+    document.querySelector("#nickname").innerHTML = `${selectedStudent.nickName}`;
     document.querySelector("#squadmember").innerHTML = `${selectedStudent.squadMember}`;
     document.querySelector("#bloodstatus").innerHTML = `${selectedStudent.bloodStatus}`;
 
@@ -241,36 +273,7 @@ function openStudentPopup(selectedStudent) {
 
 }
 
-
-function tryToExpell(selectedStudent){
-    document.querySelector("#expell-dialog").classList.remove("hide");
-
-    if (selectedStudent.nickName === 'JOJO') {
-        document.querySelector("#expell-dialog .generic").classList.add("hide");
-        document.querySelector("#expell-dialog .awesome-student").classList.remove("hide");
-    } else {
-        document.querySelector("#expell-dialog .generic").classList.remove("hide");
-        document.querySelector("#expell-dialog .awesome-student").classList.add("hide");
-    }
-
-    document.querySelector("#expellstudent").addEventListener("click", clickExpellStudent);
-    document.querySelector("#expell-dialog .closebutton").addEventListener("click", closeExpellDialog);
-
-    function clickExpellStudent() {
-        selectedStudent.expelled = true;
-        const onlyNonExpelled = globalStudents.filter(student => student.expelled === false);
-        closeExpellDialog();
-        displayData(onlyNonExpelled);
-    }
-
-    // OPTIONAL: Remove prefect status and squad member status (no expelled students can be prefects or squad members)
-
-    function closeExpellDialog(){
-        console.log("closebutton clicked");
-        document.querySelector("#expell-dialog").classList.add("hide");
-    }
-}
-
+//////////MAKE PREFECT////////////
 function tryToMakePrefect(selectedStudent){
 
     const prefects = globalStudents.filter(student => student.prefect);
@@ -317,6 +320,18 @@ function makePrefect(student){
 
 }
 
+function clickPrefect(student){
+    // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
+
+    if (student.prefect === true){
+        student.prefect = false;
+    } else{
+        tryToMakePrefect(student);
+    }
+    buildList();
+}
+//////////CLENAING STUDENTS NAMES////////////
+
 function cleanStudents(students){
     console.log(students);
 
@@ -327,6 +342,7 @@ function cleanStudents(students){
 
     console.table(globalStudents);
 }
+//////////GET BLOOD STATUS////////////
 
 function getBloodStatus(lastName) {
     const hyphenIndex = lastName.indexOf('-');
@@ -450,10 +466,6 @@ function cleanItem(item){
     return `${itemWithoutQuotationMarks.charAt(0).toUpperCase()}${itemWithoutQuotationMarks.slice(1).toLowerCase()}`;
 }
 
-function displayData(students){
-    displayTable(students);
-}
-
 //OPEN NUMBERS DIALOG
 function openNumberDialog(){
     //show number dialog 
@@ -487,7 +499,6 @@ function openNumberDialog(){
     }
 }
 
-
 //FILTERS HOUSE 
 function checkFilter(event) {
     //filter = event.target.dataset.filter;
@@ -501,7 +512,7 @@ function setFilter(filter){
     buildList();
 }
 
-// FILTERS BY SEARCH
+///////////////FILTERS BY SEARCH//////////////////
 function checkSearch() {
     settings.searchQuery = searchInput.value;
     buildList();
@@ -516,6 +527,7 @@ function filterStudentsBySearch(students) {
     });
 }
 
+///////////////FILTER BY SELECT/////////////////
 function filterStudentsBySelect(filteredStudents) {
     switch(settings.filterBy) {
         case "All":
@@ -560,7 +572,7 @@ function isAll(student){
     return true;
 }
 
-//SORTING 
+///////////////////SORTING/////////////////////////
 function checkSort(event) {
     const sortBy = event.target.dataset.sort;
     let sortDir = event.target.dataset.sortDirection
@@ -602,7 +614,7 @@ function sortStudents(sortedList){
     return sortedList;
 }
 
-//BUILD LIST 
+////////////COLLECT SORTED AND FILTERED LISTS AND DISPLAY////////////
 function buildList() {
     globalFilteredStudents = filterStudentsBySelect(globalStudents);
     globalFilteredStudents = filterStudentsBySearch(globalFilteredStudents);
@@ -610,18 +622,8 @@ function buildList() {
     displayTable(globalFilteredStudents);
 } 
 
-// RANDOMIZE BLOOD STATUS
-function randomizeBloodStatus () {
-    if (isHacking) {
-        globalStudents = globalStudents.map(function(student) {
-            const bloodStatusTypes = ['Pure', 'Half'];
-            student.bloodStatus = bloodStatusTypes[Math.floor(Math.random() * 2)];
-            return student;
-        }) 
-    }
-}
 
-//HACKING
+///////////////////HACKING THE SYSTEM/////////////////////
 function hackTheSytem() {
     // Returns (does nothing, if is hacking is true)
     if (isHacking) return;
@@ -640,10 +642,21 @@ function hackTheSytem() {
         expelled: false,
         prefect: false,
         bloodStatus: 'Muggle',
-        squadMember: 'Fuck yeah',
+        squadMember: 'YESSS!!',
     }
 
     globalStudents.push(hackerGirl);
     randomizeBloodStatus();
     buildList();
+}
+
+// RANDOMIZE BLOOD STATUS
+function randomizeBloodStatus () {
+    if (isHacking) {
+        globalStudents = globalStudents.map(function(student) {
+            const bloodStatusTypes = ['Pure', 'Half'];
+            student.bloodStatus = bloodStatusTypes[Math.floor(Math.random() * 2)];
+            return student;
+        }) 
+    }
 }
