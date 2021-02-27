@@ -47,6 +47,9 @@ function start() {
 
     searchInput.addEventListener("keyup", checkSearch);
 
+    //event listener for hacking 
+    document.getElementById("hack-button").addEventListener("click", hackTheSytem);
+
     listItems.forEach((listItem) => {
         listItem.addEventListener("click", checkSort);
     });
@@ -97,9 +100,9 @@ function displayTable(students) {
 
 function displayStudent(student) {
     //create clone 
-    const copy = document.querySelector("template#student").content.cloneNode(true);
+    const copy = document.querySelector("template#student").content.cloneNode(true); 
     //fill template 
-    copy.querySelector("[data-field=firstName]").textContent = `${student.firstName} >` ; 
+    copy.querySelector("[data-field=firstName]").textContent = `${student.firstName} ↳` ;
     copy.querySelector("[data-field=middleName]").textContent = student.middleName;
     copy.querySelector("[data-field=lastName]").textContent = student.lastName;
     copy.querySelector("[data-field=nickName]").textContent = student.nickName; 
@@ -145,27 +148,31 @@ function assignToSquad(student) {
     // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
 
     if (student.house === 'Slytherin' || student.bloodStatus === 'Pure') {
-        // student.squadMember = student.squadMember === 'Yes' ? 'No' : 'Yes'
+        // student.squadMember = student.squadMember === 'Yes' ? 'add' : 'Yes'
         if (student.squadMember === 'Yes') {
-            student.squadMember = 'No';
+            student.squadMember = 'add';
         } else {
             student.squadMember = 'Yes';
         }
 
         buildList();
     } else {
-        // show popup that explains you're not worthy
+        document.getElementById("squad-dialog").classList.remove("hide");
+        document.querySelector("#squad-dialog .closebutton").addEventListener("click", closeSquadDialog);
     }
 
     if (isHacking) {
-        console.log('i am hacking');
         setTimeout(function() {
             student.squadMember = 'No';
 
-            // You can change to something else
-            alert('Something fishy is going on...');
+            alert('Something weird is going on...The squad members magically disappeared');
             buildList();
         }, 5000);
+    }
+
+    function closeSquadDialog(){
+        console.log("closebutton clicked");
+        document.getElementById("squad-dialog").classList.add("hide");
     }
 }
 
@@ -362,7 +369,6 @@ function getBloodStatus(lastName) {
     return 'Muggle';
 }
 
-
 function getItems(student){
     const nameObject = splitNames(student.fullname);
     //const studentHouse = student.house;
@@ -384,7 +390,7 @@ function getItems(student){
         expelled: false,
         prefect: false,
         bloodStatus: bloodStatus,
-        squadMember: 'No',
+        squadMember: 'add',
     }
 }
 
@@ -448,7 +454,7 @@ function displayData(students){
     displayTable(students);
 }
 
-//POPUPS
+//OPEN NUMBERS DIALOG
 function openNumberDialog(){
     //show number dialog 
     document.getElementById("number-dialog").classList.remove("hide");
@@ -481,7 +487,6 @@ function openNumberDialog(){
     }
 }
 
-//FILTERS EXPELLED
 
 //FILTERS HOUSE 
 function checkFilter(event) {
@@ -616,20 +621,20 @@ function randomizeBloodStatus () {
     }
 }
 
-//HACKING HACK HACK
+//HACKING
 function hackTheSytem() {
     // Returns (does nothing, if is hacking is true)
     if (isHacking) return;
 
     isHacking = true;
-    console.log('%c Oh my heavens! the dark powers are taking over, help!!', 'color: #FF0000; font-size: 2rem');
+    console.log('%c You hacked the system!', 'color: #FF0000; font-size: 2rem');
 
     const hackerGirl = {
         firstName: 'Johanna',
         lastName: 'Himstedt',
         middleName: 'N/A',
         nickName: 'JOJO',
-        house: 'None of your beezneez',
+        house: 'Slytherin',
         imageUrl: 'imageURL',
         gender: 'girl',
         expelled: false,

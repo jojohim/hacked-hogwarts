@@ -1,6 +1,4 @@
 /*FONTS*/
-
-
 *{
     font-family: Georgia, 'Times New Roman', Times, serif;
 }
@@ -114,7 +112,6 @@ height: 40px;
 #list th {
     padding-top: 12px;
     padding-bottom: 12px;
-    text-align: left;
     /*background-color: rgb(51, 44, 102);*/
     background-color: #ad915b;
     color: white;
@@ -146,10 +143,6 @@ tr th:hover {
     cursor: pointer;
 }
 
-#expelled {
-    text-align: center;
-}
-
 td[data-field=prefect][data-prefect=true]::after{
     content: "🌟";
 }
@@ -158,9 +151,13 @@ td[data-field=prefect][data-prefect=false]::after{
     content: "add";
 }
 
-td[data-field=prefect]{
+td[data-field=prefect],
+td[data-field=expelled],
+td[data-field=squad-member]{
     text-align: center;
+
 }
+
 /***********DIALOG BOX*************/
  .modal {
     position: fixed;
@@ -178,20 +175,37 @@ td[data-field=prefect]{
     box-shadow: 1px 1px 10px rgb(54, 54, 54);
     border-radius: 12px;
     padding: 2em;
-    background-color: #f7ede1;
+    background-color:rgb(240,234,224);
     position: relative;
   }
   
+
+  /*********BUTTONS**********/
+
+#hack-button{
+    position: absolute;
+    bottom: 2vw;
+    right: 2vw;
+  }
   button.closebutton{
     position: absolute;
     right: -0.5vw;
     top: -0.5vw;
-    width: 2.5em;
-    height: 2.5em;
+    width: 3.5em;
+    height: 3.5em;
     border-radius: 50%;
-    border: 1px solid black;
+    border: 3px solid rgb(174,145,91);
   }
 
   button:hover{
+    background-color:rgb(174,145,91);
+    color: white;
       cursor: pointer;
   }
+
+  .text-button{
+    border-radius: 50px;
+    border: 4px solid rgb(174,145,91);
+    background-color: rgb(240,234,224);
+    padding: 10px 30px;
+  } 

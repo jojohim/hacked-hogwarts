@@ -35,6 +35,7 @@
     <p id="more-details">Show more details...</p>
 </div>
 
+<button id="hack-button" class="text-button">HACK THE SYSTEM</button>
 <table id="list">
     <thead>
       <tr id="sorting">
@@ -103,18 +104,18 @@
     <h1>Warning!</h1>
     <p>Only one student of each gender can be prefect<br>
     Do you want to remove the other prefect?</p>
-    <button id="removeother">Remove the other</button>
+    <button id="removeother" class="text-button">Remove the other</button>
   </div>
 </div>
 
 <div id="expell-dialog" class="modal hide">
   <div class="dialog">
-    <button class="closebutton">✕</button>
+    <button class="closebutton">✖</button>
     <div class="generic">
       <h1>Warning!</h1>
       <p>Expelling this student will remove them from this list<br><br>
       Do you want to expell this student?</p>
-      <button id="expellstudent">Expell Student</button>
+      <button id="expellstudent" class="text-button">Expell Student</button>
     </div>
     <div class="awesome-student hide">
       <h1>You are stupid.</h1>
@@ -122,6 +123,16 @@
     </div>
   </div>
 </div>
+
+<div id="squad-dialog" class="modal hide">
+  <div class="dialog">
+    <button class="closebutton">✕</button>
+    <h1>Warning!</h1>
+    <p>Only students that are pure blooded or in Slytherin<br>
+    can be a part of the Inquistorial squad.</p>
+  </div>
+</div>
+
 
 </div>
 <script src="hogwarts.js"></script>
