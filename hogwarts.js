@@ -2,8 +2,13 @@
 
 window.addEventListener("DOMContentLoaded", start);
 
+// Results from fetch
 let studentsGlobalArray = [];
+let families = {};
+
+// Cleaned version
 let globalStudents = [];
+let globalFilteredStudents = [];
 
 
 //OBJECT FOR FILTERING AND SORTING 
@@ -11,21 +16,26 @@ let settings = {
     filterBy: "All",
     sortBy: "all",
     sortDir: "",
+    searchQuery: ""
 }
 
+let isHacking = false;
+
 //variables for filtering
-let houseButton = document.getElementById("housefilter");
+const houseButton = document.getElementById("housefilter");
+
+// Search Input
+const searchInput = document.getElementById("searchbar");
 
 //variables for sorting
-let listItems = document.querySelectorAll("[data-action=sort]");
+const listItems = document.querySelectorAll("[data-action=sort]");
 
 //variables for pop-up 
-let numbersButton = document.getElementById("more-details");
-
+const numbersButton = document.getElementById("more-details");
 
 let studentTemplate = {
-    fullname:"",
-    gender:"",
+    fullname: "",
+    gender: "",
     house: "",
 }
 
@@ -33,25 +43,31 @@ function start() {
     loadJSON();
 
     //Add event listeners for filters and sorts
-        houseButton.addEventListener("change", checkFilter);
+    houseButton.addEventListener("change", checkFilter);
 
-        listItems.forEach((listItem) => {
-            listItem.addEventListener("click", checkSort);
-        });
+    searchInput.addEventListener("keyup", checkSearch);
+
+    listItems.forEach((listItem) => {
+        listItem.addEventListener("click", checkSort);
+    });
 
     //Event listeners for numbers pop-up
-        numbersButton.addEventListener("click", openNumberDialog);
+    numbersButton.addEventListener("click", openNumberDialog);
 
     //Add event listeners for filters, etc
-
 }
 
 async function loadJSON() {
-    const response = await fetch("https://petlatkea.dk/2021/hogwarts/students.json");
-    const jsonData = await response.json();
+    const studentsResponse = await fetch("https://petlatkea.dk/2021/hogwarts/students.json");
+    const studentsJsonData = await studentsResponse.json();
 
-    //when loaded, prepare data objects
-    prepareObjects(jsonData);
+    const familiesResponse = await fetch("https://petlatkea.dk/2021/hogwarts/families.json");
+    const familiesJsonData = await familiesResponse.json();
+
+    families = familiesJsonData;
+
+    //when loaded, prepare data 
+    prepareObjects(studentsJsonData);
 }
 
 function prepareObjects(jsonData) {
@@ -59,7 +75,6 @@ function prepareObjects(jsonData) {
     // call clean students to then call for each 
     cleanStudents(studentsGlobalArray);
     displayData(globalStudents);
-
 }
 
 function prepareObject(jsonObject){
@@ -88,7 +103,9 @@ function displayStudent(student) {
     copy.querySelector("[data-field=middleName]").textContent = student.middleName;
     copy.querySelector("[data-field=lastName]").textContent = student.lastName;
     copy.querySelector("[data-field=nickName]").textContent = student.nickName; 
+    copy.querySelector("[data-field=bloodStatus]").textContent = student.bloodStatus; 
     copy.querySelector("[data-field=house]").textContent = student.house;
+    copy.querySelector("[data-field=squad-member]").textContent = student.squadMember;
 
     //EXPELL STUDENT TOGGLE 
     if (student.expelled == true) {
@@ -97,32 +114,22 @@ function displayStudent(student) {
     copy.querySelector("[data-field=expelled]").textContent = "expell"; 
     }
 
-    copy.querySelector("[data-field=expelled]").addEventListener("click", clickExpell);
+    copy.querySelector("[data-field=expelled]").addEventListener("click", function () {
+        expellStudent(student);
+    });
 
-    function clickExpell(){
-        if (student.expelled === true){
-            student.expelled = false;
-        }
-        else{
-            tryToExpell(student);
-        }
-
-        //student.expelled = ! student.expelled;
-        buildList();
-    }
+    copy.querySelector("[data-field=squad-member]").addEventListener("click", function () {
+        assignToSquad(student);
+    });
 
     //MAKE PREFECT TOGGLE
     copy.querySelector("[data-field=prefect]").dataset.prefect = student.prefect;
-    copy.querySelector("[data-field=prefect]").addEventListener("click", clickPrefect);
 
-    function clickPrefect(){
-    if (student.prefect === true){
-        student.prefect = false;
-    } else{
-        tryToMakePrefect(student);
-    }
-    buildList();
-    }
+
+    copy.querySelector("[data-field=prefect]").addEventListener("click", function() {
+        clickPrefect(student);
+    });
+
     //OPEN STUDENT DIALOG 
     //add eventlistener to open dialog 
     copy.querySelector("[data-field=firstName]").addEventListener("click", clickStudent);
@@ -134,19 +141,75 @@ function displayStudent(student) {
     document.querySelector("#list tbody").appendChild(copy);
 }
 
+function assignToSquad(student) {
+    // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
+
+    if (student.house === 'Slytherin' || student.bloodStatus === 'Pure') {
+        // student.squadMember = student.squadMember === 'Yes' ? 'No' : 'Yes'
+        if (student.squadMember === 'Yes') {
+            student.squadMember = 'No';
+        } else {
+            student.squadMember = 'Yes';
+        }
+
+        buildList();
+    } else {
+        // show popup that explains you're not worthy
+    }
+
+    if (isHacking) {
+        console.log('i am hacking');
+        setTimeout(function() {
+            student.squadMember = 'No';
+
+            // You can change to something else
+            alert('Something fishy is going on...');
+            buildList();
+        }, 5000);
+    }
+}
+
+function clickPrefect(student){
+    // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
+
+    if (student.prefect === true){
+        student.prefect = false;
+    } else{
+        tryToMakePrefect(student);
+    }
+    buildList();
+}
+
+function expellStudent(student){
+    if (student.expelled === true){
+        return;
+    } else {
+        tryToExpell(student);
+        buildList();
+    }
+
+    // student.expelled =! student.expelled;
+}
+
+
 function openStudentPopup(selectedStudent) {
     //show student popup 
     document.getElementById("student-dialog").classList.remove("hide");
     //change student info 
-        //set image 
+    // Set image 
     document.querySelector(".student-img").src = `images/${selectedStudent.imageUrl}`;
 
-        //set info
+    // Set info
     document.querySelector("#fullname").innerHTML = `${selectedStudent.firstName} ${selectedStudent.lastName}`;
+    document.querySelector("#prefect").innerHTML = `${selectedStudent.prefect}`;
+    document.querySelector("#expelled").innerHTML = `${selectedStudent.expelled}`;
+    document.querySelector("#squadmember").innerHTML = `${selectedStudent.squadMember}`;
+    document.querySelector("#bloodstatus").innerHTML = `${selectedStudent.bloodStatus}`;
 
-        //set student colours and crest
+    //set student colours and crest
     document.querySelector(".crest").src = `icons/${selectedStudent.house}.svg`;
 
+    // Move styling to css, control styling with javascript by toggling classNames
     if(selectedStudent.house == "Slytherin"){
         document.querySelector(".house-border").style.borderColor = "rgb(37, 117, 0)";
         document.querySelector(".crest").style.borderColor = "rgb(37, 117, 0)";
@@ -173,21 +236,32 @@ function openStudentPopup(selectedStudent) {
 
 
 function tryToExpell(selectedStudent){
-document.querySelector("#expell-dialog").classList.remove("hide");
-document.querySelector("#expellstudent").addEventListener("click", clickExpellStudent);
-document.querySelector("#expell-dialog .closebutton").addEventListener("click", closeExpellDialog);
+    document.querySelector("#expell-dialog").classList.remove("hide");
 
-function clickExpellStudent(){
-    selectedStudent.expelled = true;
-    const onlyNonExpelled = globalStudents.filter(student => student.expelled === false);
-    closeExpellDialog();
-    displayData(onlyNonExpelled);
-}
+    if (selectedStudent.nickName === 'JOJO') {
+        document.querySelector("#expell-dialog .generic").classList.add("hide");
+        document.querySelector("#expell-dialog .awesome-student").classList.remove("hide");
+    } else {
+        document.querySelector("#expell-dialog .generic").classList.remove("hide");
+        document.querySelector("#expell-dialog .awesome-student").classList.add("hide");
+    }
 
-function closeExpellDialog(){
-    console.log("closebutton clicked");
-    document.querySelector("#expell-dialog").classList.add("hide");
-}
+    document.querySelector("#expellstudent").addEventListener("click", clickExpellStudent);
+    document.querySelector("#expell-dialog .closebutton").addEventListener("click", closeExpellDialog);
+
+    function clickExpellStudent() {
+        selectedStudent.expelled = true;
+        const onlyNonExpelled = globalStudents.filter(student => student.expelled === false);
+        closeExpellDialog();
+        displayData(onlyNonExpelled);
+    }
+
+    // OPTIONAL: Remove prefect status and squad member status (no expelled students can be prefects or squad members)
+
+    function closeExpellDialog(){
+        console.log("closebutton clicked");
+        document.querySelector("#expell-dialog").classList.add("hide");
+    }
 }
 
 function tryToMakePrefect(selectedStudent){
@@ -240,16 +314,62 @@ function cleanStudents(students){
     console.log(students);
 
     students.forEach(student => {
-    const cleanedStudentObject = getItems(student);
-    globalStudents.push(cleanedStudentObject);
+        const cleanedStudentObject = getItems(student);
+        globalStudents.push(cleanedStudentObject);
     });
+
     console.table(globalStudents);
 }
+
+function getBloodStatus(lastName) {
+    const hyphenIndex = lastName.indexOf('-');
+
+    if (hyphenIndex > -1) {
+        // Split names into two names (easier to handle)
+        const hyphenName = lastName.split('-');
+
+        const isPure = hyphenName.some(function(name) {
+            return families.pure.includes(name)
+        });
+
+        const isHalf = hyphenName.some(function(name) {
+            return families.half.includes(name)
+        });
+
+        if (isPure && isHalf) {
+            return 'Half'
+        } 
+
+        if (isPure) {
+            return 'Pure';
+        }
+
+        if (isHalf) {
+            return 'Half';
+        }
+
+        return 'Muggle';
+    } 
+
+    if (families.half.includes(lastName)) {
+        return 'Half';
+    } 
+    
+    if (families.pure.includes(lastName)) {
+        return 'Pure' ;
+    }
+
+    return 'Muggle';
+}
+
 
 function getItems(student){
     const nameObject = splitNames(student.fullname);
     //const studentHouse = student.house;
-    const studentHouse = cleanItems(student.house).trim();
+
+    const bloodStatus = getBloodStatus(nameObject.lastName);
+
+    const studentHouse = cleanItem(student.house);
     const studentGender = student.gender;
     const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
 
@@ -263,7 +383,8 @@ function getItems(student){
         gender: studentGender,
         expelled: false,
         prefect: false,
-        squadMember: undefined,
+        bloodStatus: bloodStatus,
+        squadMember: 'No',
     }
 }
 
@@ -282,7 +403,7 @@ function splitNames(fullname) {
         if (index === 0) {
             // Combines first letter at index 0 and uppercase it, and then combines it
             // with the rest of the name (from index 1) and set it to lowercase
-            nameObject.firstName = cleanItems(name);   
+            nameObject.firstName = cleanItem(name);   
         }
 
         // If index is not 0 or names.length - 1 (last index) (last name or first name)
@@ -291,21 +412,21 @@ function splitNames(fullname) {
             
             // If this is a nickname (starts and ends with ")
             if (name[0] == '"' && name[name.length - 1] == '"' ) {
-                nameObject.nickName = cleanItems(name);
+                nameObject.nickName = cleanItem(name);
             } else {
-                nameObject.middleName = cleanItems(name);   
+                nameObject.middleName = cleanItem(name);   
             }
         }
 
         if (index === names.length - 1) {
-            nameObject.lastName = cleanItems(name);   
+            nameObject.lastName = cleanItem(name);   
         }
     })
 
     return nameObject;
 }
 
-function cleanItems(item){
+function cleanItem(item){
     let itemWithoutQuotationMarks = item.replaceAll('"', '');
     const hyphenIndex = itemWithoutQuotationMarks.indexOf('-');
 
@@ -319,21 +440,15 @@ function cleanItems(item){
         return itemWithoutQuotationMarks;
     } 
 
+    itemWithoutQuotationMarks = itemWithoutQuotationMarks.trim();
     return `${itemWithoutQuotationMarks.charAt(0).toUpperCase()}${itemWithoutQuotationMarks.slice(1).toLowerCase()}`;
 }
 
 function displayData(students){
     displayTable(students);
-    //displayNumbers();
-}
-//SEARCHING
-
-function searchForStudent(){
-    let input = document.getElementById("searchbar").value;
 }
 
 //POPUPS
-
 function openNumberDialog(){
     //show number dialog 
     document.getElementById("number-dialog").classList.remove("hide");
@@ -377,102 +492,85 @@ function checkFilter(event) {
 }
 
 function setFilter(filter){
-settings.filterBy = filter;
-buildList();
+    settings.filterBy = filter;
+    buildList();
 }
 
-function filterStudents(filteredStudents) {
+// FILTERS BY SEARCH
+function checkSearch() {
+    settings.searchQuery = searchInput.value;
+    buildList();
+}
 
+function filterStudentsBySearch(students) {
+    return students.filter(function(student) {
+        return (
+            student.firstName.toLowerCase().includes(settings.searchQuery.toLowerCase()) || 
+            student.lastName.toLowerCase().includes(settings.searchQuery.toLowerCase())
+        );
+    });
+}
+
+function filterStudentsBySelect(filteredStudents) {
     switch(settings.filterBy) {
         case "All":
             filteredStudents = globalStudents.filter(isAll);
             break;
         case "Gryffindor":
-            filteredStudents = globalStudents.filter(isGryffindor);
-            break;
         case "Ravenclaw":
-            filteredStudents = globalStudents.filter(isRavenclaw);
-            break;
         case "Hufflepuff":
-            filteredStudents = globalStudents.filter(isHufflepuff);
-            break;
         case "Slytherin":
-            filteredStudents = globalStudents.filter(isSlytherin);
+            filteredStudents = globalStudents.filter(function(student) {
+                return checkHouse(student, settings.filterBy);
+            });
             break;
         case "Expelled":
             filteredStudents = globalStudents.filter(isExpelled);
     }
 
-return filteredStudents;
-
+    return filteredStudents;
 }
 
 function isExpelled(student) {    
-    if(student.expelled === true){
+    if (student.expelled === true) {
         return true;
-    }
-    else{
+    } else { 
         return false;
     }
 }
 
-function isHufflepuff(student){
-    if(student.house === "Hufflepuff"){
+function checkHouse(student, house){
+    if(student.house === house){
         return true;
-    }
-    else{
-        return false;
-    }
-}
-
-function isGryffindor(student){
-    if(student.house === "Gryffindor"){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-function isSlytherin(student){
-    if(student.house === "Slytherin"){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-
-function isRavenclaw(student){
-    if(student.house === "Ravenclaw"){
-        return true;
-    }
-    else{
+    } else{
         return false;
     }
 }
 
 function isAll(student){
+    if (student.expelled) { 
+        return false;
+    }
+
     return true;
 }
 
 //SORTING 
 function checkSort(event) {
-
     const sortBy = event.target.dataset.sort;
-    const sortDir = event.target.dataset.sortDirection
+    let sortDir = event.target.dataset.sortDirection
 
     //toggle direction 
-    if(settings.sortDir === "asc"){
-        event.target.dataset.sortDirection = "desc";
+    if (settings.sortDir === "asc"){
+        sortDir = "desc";
     } else {
-        event.target.dataset.sortDirection = "asc";
+        sortDir = "asc";
     }
 
     setSort(sortBy, sortDir);
 }
 
-function setSort(sortBy, sortDir){
+function setSort(sortBy, sortDir) {
     settings.sortBy = sortBy;
     settings.sortDir = sortDir;
     buildList();
@@ -481,7 +579,7 @@ function setSort(sortBy, sortDir){
 function sortStudents(sortedList){
 
     let direction = 1;
-    if(settings.sortDir === "desc") {
+    if (settings.sortDir === "desc") {
         direction = -1
     } else {
         direction = 1;
@@ -492,47 +590,55 @@ function sortStudents(sortedList){
     function sortBySort(studentA, studentB) {
         if(studentA[settings.sortBy] < studentB[settings.sortBy]) {
             return -1 * direction;
-            }
-            else {
-                return 1 * direction;
-            }
+        } else {
+            return 1 * direction;
+        }
     }
     return sortedList;
 }
 
 //BUILD LIST 
-function buildList(){
-const currentList = filterStudents(globalStudents);
-const sortedList = sortStudents(currentList);
-displayTable(sortedList);
+function buildList() {
+    globalFilteredStudents = filterStudentsBySelect(globalStudents);
+    globalFilteredStudents = filterStudentsBySearch(globalFilteredStudents);
+    globalFilteredStudents = sortStudents(globalFilteredStudents);
+    displayTable(globalFilteredStudents);
 } 
 
-//CHECK FOR EXPELL, SQUAD AND PREFECT
-function checkDetails() {
-    //toggle expell to make expelled true and false 
-toggleExpell();
-    //toggle squad member 
-toggleSquadMember();
-    //toggle prefect
-togglePrefect();
-}
-
-function toggleSquadMember(){
-    //if state false add as squad member 
-    //if state true delete as squad member
-} 
-
-function togglePrefect(){
-    //deletes last prefect and adds new one
-}
-
-//NUMBERS
-function displayNumbers(){
-}
-
-function getNumbers(){
+// RANDOMIZE BLOOD STATUS
+function randomizeBloodStatus () {
+    if (isHacking) {
+        globalStudents = globalStudents.map(function(student) {
+            const bloodStatusTypes = ['Pure', 'Half'];
+            student.bloodStatus = bloodStatusTypes[Math.floor(Math.random() * 2)];
+            return student;
+        }) 
+    }
 }
 
 //HACKING HACK HACK
+function hackTheSytem() {
+    // Returns (does nothing, if is hacking is true)
+    if (isHacking) return;
 
+    isHacking = true;
+    console.log('%c Oh my heavens! the dark powers are taking over, help!!', 'color: #FF0000; font-size: 2rem');
 
+    const hackerGirl = {
+        firstName: 'Johanna',
+        lastName: 'Himstedt',
+        middleName: 'N/A',
+        nickName: 'JOJO',
+        house: 'None of your beezneez',
+        imageUrl: 'imageURL',
+        gender: 'girl',
+        expelled: false,
+        prefect: false,
+        bloodStatus: 'Muggle',
+        squadMember: 'Fuck yeah',
+    }
+
+    globalStudents.push(hackerGirl);
+    randomizeBloodStatus();
+    buildList();
+}

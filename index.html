@@ -43,6 +43,7 @@
         <th data-action="sort" data-sort-direction="asc" data-sort="lastName">Last Name</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="nickName">Nickname</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="house">House</th>
+        <th data-action="sort" data-sort-direction="asc" data-sort="bloodStatus">Blood Status</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="expelled">Expelled?</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="prefect">Prefect?</th>
         <th data-action="sort" data-sort-direction="asc" data-sort="squad-member">Squad Member?</th>
@@ -60,7 +61,8 @@
       <td data-field="lastName">LAST NAME</td>
       <td data-field="nickName">NICK NAME</td>
       <td data-field="house">HOUSE</td>
-      <td id="expelled" data-field="expelled">EXPELLED</td>
+      <td data-field="bloodStatus">BLOODSTATUS</td>
+      <td data-field="expelled">EXPELLED</td>
       <td data-field="prefect" data-prefect="false"></td>
       <td data-field="squad-member">SQUAD</td>   
     </tr>
@@ -68,16 +70,18 @@
 
 <div id="student-dialog" class="modal hide">
   <div class="dialog house-border">
-<button class="closebutton">✕</button>
-<img src="icons/gryffindor.svg" class="crest"><br>
-<img src="images/granger_h.png" class="student-img">
+  <button class="closebutton">✕</button>
+    <img src="#" class="crest"><br>
+    <img src="#" class="student-img">
 
-<div id="info-wrapper">
-<h4 id="fullname">Hermoine Granger</h4>
-<h4 id="otherInfo">Other Info: not expelled, prefect</h4> 
-<h4 id="bloodStatus">Blood status: half-blood</h4> 
-</div>
-</div>
+    <div id="info-wrapper">
+      <h4>Name: <span id="fullname"></span>
+      <h4>Prefect: <span id="prefect"></span>
+      <h4>Expelled: <span id="expelled"></span>
+      <h4>Squadmember: <span id="squadmember"></span>
+      <h4>Bloodstatus: <span id="bloodstatus"></span>
+    </div>
+  </div>
 </div>
 
 <div id="number-dialog" class="modal hide">
@@ -85,11 +89,11 @@
     <button class="closebutton">✕</button> 
     <h1>Numbers</h1>
     <p id="total-number"><strong>Total students: 124938</strong></p> 
-  <p id="expelled-number">Expelled students: 124938</p>
-  <p id="gryffindor-number">Gryffindor students: 124938</p>
-  <p id="slytherin-number">Slytherin students: 124938</p>
-  <p id="hufflepuff-number">Hufflepuff students: 124938</p>
-  <p id="ravenclaw-number">Ravenclaw students: 124938</p>
+    <p id="expelled-number">Expelled students: 124938</p>
+    <p id="gryffindor-number">Gryffindor students: 124938</p>
+    <p id="slytherin-number">Slytherin students: 124938</p>
+    <p id="hufflepuff-number">Hufflepuff students: 124938</p>
+    <p id="ravenclaw-number">Ravenclaw students: 124938</p>
   </div>
 </div>
 
@@ -98,7 +102,6 @@
     <button class="closebutton">✕</button>
     <h1>Warning!</h1>
     <p>Only one student of each gender can be prefect<br>
-    and there can only be two in total.<br><br>
     Do you want to remove the other prefect?</p>
     <button id="removeother">Remove the other</button>
   </div>
@@ -107,10 +110,16 @@
 <div id="expell-dialog" class="modal hide">
   <div class="dialog">
     <button class="closebutton">✕</button>
-    <h1>Warning!</h1>
-    <p>Expelling this student will remove them from this list<br><br>
-    Do you want to expell this student?</p>
-    <button id="expellstudent">Expell Student</button>
+    <div class="generic">
+      <h1>Warning!</h1>
+      <p>Expelling this student will remove them from this list<br><br>
+      Do you want to expell this student?</p>
+      <button id="expellstudent">Expell Student</button>
+    </div>
+    <div class="awesome-student hide">
+      <h1>You are stupid.</h1>
+      <p>You cannot expell the one and only. Just stop.</p>
+    </div>
   </div>
 </div>
 
