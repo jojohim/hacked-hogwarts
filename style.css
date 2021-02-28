@@ -90,14 +90,14 @@ height: 40px;
 }
 .crest {
     margin: -20px;
-    height: 50px;
-    padding: 4px;
-    border: 2px solid;
+    height: 40px;
+    padding: 10px;
+    border: 2.5px solid;
     border-radius: 50%;
 }
 
 .house-border {
-    border: 10px solid;
+    border: 5px solid;
 }
 
 /*******TABLE STYLING********/

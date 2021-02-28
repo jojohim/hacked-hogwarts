@@ -273,6 +273,7 @@ function openStudentPopup(selectedStudent) {
 }
 
 //////////MAKE PREFECT////////////
+
 function tryToMakePrefect(selectedStudent){
 
     const prefects = globalStudents.filter(student => student.prefect);
@@ -458,7 +459,8 @@ function getBloodStatus(lastName) {
     return 'Muggle';
 }
 
-//OPEN NUMBERS DIALOG
+//////////////NUMBERS DIALOG///////////////
+
 function openNumberDialog(){
     //show number dialog 
     document.getElementById("number-dialog").classList.remove("hide");
@@ -492,6 +494,7 @@ function openNumberDialog(){
 }
 
 ///////////////FILTERS BY SEARCH//////////////////
+
 function checkSearch() {
     settings.searchQuery = searchInput.value;
     buildList();
@@ -565,6 +568,7 @@ function isAll(student){
 }
 
 ///////////////////SORTING/////////////////////////
+
 function checkSort(event) {
     const sortBy = event.target.dataset.sort;
     let sortDir = event.target.dataset.sortDirection
@@ -607,6 +611,7 @@ function sortStudents(sortedList){
 }
 
 ////////////COLLECT SORTED AND FILTERED LISTS AND DISPLAY////////////
+
 function buildList() {
     globalFilteredStudents = filterStudentsBySelect(globalStudents);
     globalFilteredStudents = filterStudentsBySearch(globalFilteredStudents);
@@ -615,6 +620,7 @@ function buildList() {
 } 
 
 ///////////////////HACKING THE SYSTEM/////////////////////
+
 function hackTheSytem() {
     // Returns (does nothing, if is hacking is true)
     if (isHacking) {
@@ -643,12 +649,11 @@ function hackTheSytem() {
     }
 }
 
-// RANDOMIZE BLOOD STATUS
 function randomizeBloodStatus () {
     if (isHacking) {
         globalStudents = globalStudents.map(function(student) {
-            const bloodStatusTypes = ['Pure', 'Half'];
-            student.bloodStatus = bloodStatusTypes[Math.floor(Math.random() * 2)];
+            const bloodStatusTypes = ['Pure', 'Half', 'Muggle'];
+            student.bloodStatus = bloodStatusTypes[Math.floor(Math.random() * 3)];
             return student;
         }) 
     }
