@@ -3,7 +3,7 @@
 window.addEventListener("DOMContentLoaded", start);
 
 // Results from fetch
-let studentsGlobalArray = [];
+let studentsResponseArray = [];
 let families = {};
 
 // Cleaned version
@@ -73,9 +73,10 @@ async function loadJSON() {
 }
 
 function prepareObjects(jsonData) {
-    studentsGlobalArray = jsonData.map(prepareObject);
+    console.log(globalStudents);
+    studentsResponseArray = jsonData.map(prepareObject);
     // call clean students to then call for each 
-    cleanStudents(studentsGlobalArray);
+    cleanStudents(studentsResponseArray);
     displayTable(globalStudents);
 }
 
@@ -134,19 +135,16 @@ function displayStudent(student) {
     });
 
     //OPEN STUDENT DIALOG 
-    //add eventlistener to open dialog 
-    copy.querySelector("[data-field=firstName]").addEventListener("click", clickStudent);
-    //grab selectedStudent and send student info to display dialog 
-    function clickStudent(){
-    openStudentPopup(student);
-    }
+    copy.querySelector("[data-field=firstName]").addEventListener("click", function() {
+        openStudentPopup(student);
+    });
+
     //append clone 
     document.querySelector("#list tbody").appendChild(copy);
 }
 
 //////////INQUISITORIAL SQUAD////////////
 function assignToSquad(student) {
-    // OPTIONAL: Add check for it person is expelled (don't allow to set to yes)
 
     if (student.house === 'Slytherin' || student.bloodStatus === 'Pure') {
         // student.squadMember = student.squadMember === 'Yes' ? 'add' : 'Yes'
@@ -164,11 +162,13 @@ function assignToSquad(student) {
 
     if (isHacking) {
         setTimeout(function() {
-            student.squadMember = 'No';
+            student.squadMember = 'add';
 
             alert('Something weird is going on...The squad members magically disappeared');
             buildList();
         }, 5000);
+    } else{
+        return;
     }
 
     function closeSquadDialog(){
@@ -176,7 +176,6 @@ function assignToSquad(student) {
         document.getElementById("squad-dialog").classList.add("hide");
     }
 }
-
 
 //////////EXPELL STUDENTS////////////
 
@@ -330,7 +329,7 @@ function clickPrefect(student){
     }
     buildList();
 }
-//////////CLENAING STUDENTS NAMES////////////
+//////////CLEANING ITEMS AND PUTTING THEM INTO GLOBAL ARRAY////////////
 
 function cleanStudents(students){
     console.log(students);
@@ -342,6 +341,80 @@ function cleanStudents(students){
 
     console.table(globalStudents);
 }
+
+function getItems(student){
+    const nameObject = splitNames(student.fullname);
+    //const studentHouse = student.house;
+
+    const bloodStatus = getBloodStatus(nameObject.lastName);
+
+    const studentHouse = cleanItem(student.house);
+    const studentGender = student.gender;
+    const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
+
+    return {
+        firstName: nameObject.firstName,
+        lastName: nameObject.lastName,
+        middleName: nameObject.middleName,
+        nickName: nameObject.nickName,
+        house: studentHouse,
+        imageUrl: imageURL,
+        gender: studentGender,
+        expelled: false,
+        prefect: false,
+        bloodStatus: bloodStatus,
+        squadMember: 'add',
+    }
+}
+
+function splitNames(fullname) {
+
+    const nameObject = {
+        nickName: "N/A",
+        middleName: "N/A",
+    };
+
+    const names = fullname.trim().split(' ');
+
+    names.forEach((name, index) => {
+        if (index === 0) {
+            nameObject.firstName = cleanItem(name);   
+        }
+        if (index !== 0 && index !== names.length - 1) {
+
+            if (name[0] == '"' && name[name.length - 1] == '"' ) {
+                nameObject.nickName = cleanItem(name);
+            } else {
+                nameObject.middleName = cleanItem(name);   
+            }
+        }
+
+        if (index === names.length - 1) {
+            nameObject.lastName = cleanItem(name);   
+        }
+    })
+
+    return nameObject;
+}
+
+function cleanItem(item){
+    let itemWithoutQuotationMarks = item.replaceAll('"', '');
+    const hyphenIndex = itemWithoutQuotationMarks.indexOf('-');
+
+    if (hyphenIndex > -1) {
+        // Split names into two names (easier to handle)
+        const hypenNames = itemWithoutQuotationMarks.split('-');
+
+
+        // Combine names + add uppercase to the latter name in the hyphen
+        itemWithoutQuotationMarks = `${hypenNames[0]}-${hypenNames[1].charAt(0).toUpperCase()}${hypenNames[1].slice(1)}`
+        return itemWithoutQuotationMarks;
+    } 
+
+    itemWithoutQuotationMarks = itemWithoutQuotationMarks.trim();
+    return `${itemWithoutQuotationMarks.charAt(0).toUpperCase()}${itemWithoutQuotationMarks.slice(1).toLowerCase()}`;
+}
+
 //////////GET BLOOD STATUS////////////
 
 function getBloodStatus(lastName) {
@@ -385,87 +458,6 @@ function getBloodStatus(lastName) {
     return 'Muggle';
 }
 
-function getItems(student){
-    const nameObject = splitNames(student.fullname);
-    //const studentHouse = student.house;
-
-    const bloodStatus = getBloodStatus(nameObject.lastName);
-
-    const studentHouse = cleanItem(student.house);
-    const studentGender = student.gender;
-    const imageURL = `${nameObject.lastName.toLowerCase()}_${nameObject.firstName.charAt(0).toLowerCase()}.png`;
-
-    return {
-        firstName: nameObject.firstName,
-        lastName: nameObject.lastName,
-        middleName: nameObject.middleName,
-        nickName: nameObject.nickName,
-        house: studentHouse,
-        imageUrl: imageURL,
-        gender: studentGender,
-        expelled: false,
-        prefect: false,
-        bloodStatus: bloodStatus,
-        squadMember: 'add',
-    }
-}
-
-function splitNames(fullname) {
-
-    const nameObject = {
-        // Start these two with undefined, in case that the student doesn't have any 
-        // middle or nickname (the student will always have a firstName and a lastName)
-        nickName: "N/A",
-        middleName: "N/A",
-    };
-
-    const names = fullname.trim().split(' ');
-
-    names.forEach((name, index) => {
-        if (index === 0) {
-            // Combines first letter at index 0 and uppercase it, and then combines it
-            // with the rest of the name (from index 1) and set it to lowercase
-            nameObject.firstName = cleanItem(name);   
-        }
-
-        // If index is not 0 or names.length - 1 (last index) (last name or first name)
-        if (index !== 0 && index !== names.length - 1) {
-
-            
-            // If this is a nickname (starts and ends with ")
-            if (name[0] == '"' && name[name.length - 1] == '"' ) {
-                nameObject.nickName = cleanItem(name);
-            } else {
-                nameObject.middleName = cleanItem(name);   
-            }
-        }
-
-        if (index === names.length - 1) {
-            nameObject.lastName = cleanItem(name);   
-        }
-    })
-
-    return nameObject;
-}
-
-function cleanItem(item){
-    let itemWithoutQuotationMarks = item.replaceAll('"', '');
-    const hyphenIndex = itemWithoutQuotationMarks.indexOf('-');
-
-    if (hyphenIndex > -1) {
-        // Split names into two names (easier to handle)
-        const hypenNames = itemWithoutQuotationMarks.split('-');
-
-
-        // Combine names + add uppercase to the latter name in the hyphen
-        itemWithoutQuotationMarks = `${hypenNames[0]}-${hypenNames[1].charAt(0).toUpperCase()}${hypenNames[1].slice(1)}`
-        return itemWithoutQuotationMarks;
-    } 
-
-    itemWithoutQuotationMarks = itemWithoutQuotationMarks.trim();
-    return `${itemWithoutQuotationMarks.charAt(0).toUpperCase()}${itemWithoutQuotationMarks.slice(1).toLowerCase()}`;
-}
-
 //OPEN NUMBERS DIALOG
 function openNumberDialog(){
     //show number dialog 
@@ -499,19 +491,6 @@ function openNumberDialog(){
     }
 }
 
-//FILTERS HOUSE 
-function checkFilter(event) {
-    //filter = event.target.dataset.filter;
-    const filter = houseButton[houseButton.selectedIndex].value;
-    console.log(filter);
-    setFilter(filter);
-}
-
-function setFilter(filter){
-    settings.filterBy = filter;
-    buildList();
-}
-
 ///////////////FILTERS BY SEARCH//////////////////
 function checkSearch() {
     settings.searchQuery = searchInput.value;
@@ -528,6 +507,19 @@ function filterStudentsBySearch(students) {
 }
 
 ///////////////FILTER BY SELECT/////////////////
+
+function checkFilter(event) {
+    //filter = event.target.dataset.filter;
+    const filter = houseButton[houseButton.selectedIndex].value;
+    console.log(filter);
+    setFilter(filter);
+}
+
+function setFilter(filter){
+    settings.filterBy = filter;
+    buildList();
+}
+
 function filterStudentsBySelect(filteredStudents) {
     switch(settings.filterBy) {
         case "All":
@@ -622,32 +614,33 @@ function buildList() {
     displayTable(globalFilteredStudents);
 } 
 
-
 ///////////////////HACKING THE SYSTEM/////////////////////
 function hackTheSytem() {
     // Returns (does nothing, if is hacking is true)
-    if (isHacking) return;
-
-    isHacking = true;
-    console.log('%c You hacked the system!', 'color: #FF0000; font-size: 2rem');
-
-    const hackerGirl = {
-        firstName: 'Johanna',
-        lastName: 'Himstedt',
-        middleName: 'N/A',
-        nickName: 'JOJO',
-        house: 'Slytherin',
-        imageUrl: 'imageURL',
-        gender: 'girl',
-        expelled: false,
-        prefect: false,
-        bloodStatus: 'Muggle',
-        squadMember: 'YESSS!!',
+    if (isHacking) {
+        return;
+    } else {
+        isHacking = true;
+        console.log('%c You hacked the system!', 'color: #FF0000; font-size: 2rem');
+    
+        const hackerGirl = {
+            firstName: 'Johanna',
+            lastName: 'Himstedt',
+            middleName: 'N/A',
+            nickName: 'JOJO',
+            house: 'Slytherin',
+            imageUrl: 'imageURL',
+            gender: 'girl',
+            expelled: false,
+            prefect: false,
+            bloodStatus: 'Muggle',
+            squadMember: 'YESSS!!',
+        }
+    
+        globalStudents.push(hackerGirl);
+        randomizeBloodStatus();
+        buildList();
     }
-
-    globalStudents.push(hackerGirl);
-    randomizeBloodStatus();
-    buildList();
 }
 
 // RANDOMIZE BLOOD STATUS
